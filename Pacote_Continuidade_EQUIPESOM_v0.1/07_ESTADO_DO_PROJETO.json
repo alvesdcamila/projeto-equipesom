@@ -1,0 +1,44 @@
+{
+  "projeto": "EQUIPESOM - gerador de propostas para eventos",
+  "versao_contexto": "0.1",
+  "atualizado_em": "2026-08-03",
+  "fase": "descoberta e desenho do esqueleto",
+  "proximo_marco": "Fechar Gate 1 e produzir Modelo de Dados e Fluxos v0.2",
+  "pessoas": {
+    "camila": "responsável pelo projeto, organização e revisão",
+    "edevaldo": "sócio, responsável operacional, assinatura e envio"
+  },
+  "empresa": {
+    "marca": "EQUIPESOM",
+    "razao_social": "17.681.110 EDEVALDO ALVES",
+    "cnpj": "17.681.110/0001-69",
+    "situacao": "ATIVA"
+  },
+  "decisoes_chave": [
+    "SaaS multiempresa desde o início",
+    "Propostas emitidas são imutáveis",
+    "Dados e modelos visuais são separados",
+    "Assinatura do fornecedor e aceite do cliente são distintos",
+    "Pagamento em até 5 dias úteis após o fim do evento",
+    "Validade padrão de 30 dias",
+    "Pilares da marca: qualidade, comprometimento e parceria",
+    "contato@equipesom.com.br sem senha compartilhada"
+  ],
+  "inventario": {
+    "status": "inicial e incompleto",
+    "data_recebimento": "2026-08-03",
+    "itens_estruturados": 20,
+    "divergencias_criticas": [
+      "total declarado de caixas não reconcilia com as linhas",
+      "grafias de marcas e modelos",
+      "contagem de kits de microfones duplos",
+      "itens históricos ausentes"
+    ]
+  },
+  "nao_iniciar_como_definitivo": [
+    "programação completa antes do modelo de dados",
+    "cláusulas sem revisão jurídica",
+    "tratamento tributário sem contabilidade",
+    "disponibilidade calculada a partir do inventário incompleto"
+  ]
+}

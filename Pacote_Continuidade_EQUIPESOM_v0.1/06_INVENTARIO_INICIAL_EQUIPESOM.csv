@@ -1,0 +1,22 @@
+id;categoria;nome_normalizado;quantidade;unidade;marca_modelo_informado;especificacao_informada;estado_do_dado;confirmacao_necessaria
+CONTROLE;Som / caixas;Caixas de 15 polegadas - total declarado;6;un;Não informado;15 polegadas;Divergente;Reconciliar com 14 caixas ativas, 2 EON 615 e 2 subs
+INV-001;Som / caixas;Caixa ativa;14;un;Modelo não informado;600 - confirmar unidade;Informado;Confirmar marca, modelo, tamanho e potência RMS
+INV-002;Som / caixas;Caixa ativa EON 615;2;un;EON 615;Potência e fabricante não informados;Informado;Fotografar etiqueta e não presumir fabricante
+INV-003;Som / caixas;Subwoofer ativo;2;un;Modelo não informado;1200 - confirmar unidade;Informado;Confirmar marca, modelo e tamanho
+INV-004;Som / mixagem;Mesa de som;2;un;Smart Vux 08 Pro;8 canais a confirmar;Confirmar grafia;Histórico usa SmartVox SV8PRO
+INV-005;Som / mixagem;Mesa de som;1;un;Behringer - modelo não informado;16 canais;Informado;Confirmar modelo exato
+INV-006;Som / processamento;Equalizador;2;un;Behringer - modelo não informado;32 bandas;Confirmar especificação;Histórico registra FBQ 31 Band
+INV-007;Som / processamento;Crossover;2;un;Mak Áudio;Modelo não informado;Confirmar grafia;Históricos usam Mark Audio
+INV-008;Som / microfones;Kit de microfone sem fio duplo;2;kit;Lincoln Duplo;Componentes não confirmados;Informado;Separar receptores e transmissores
+INV-009;Som / microfones;Kit de microfone sem fio duplo;1;kit;Lelong 906;Componentes não confirmados;Informado;Confirmar grafia e componentes
+INV-010;Som / microfones;Microfone com cabo XLR;5;un;Não informado;Conector XLR;Informado;Confirmar marca, modelo e estado
+INV-011;Energia / cabos;Extensão com fio 4 mm;1;un;Não informado;40 metros;Informado;Confirmar vias, conectores e bitola
+INV-012;Energia / cabos;Extensão com fio 4 mm;1;un;Não informado;45 metros;Informado;Confirmar vias, conectores e bitola
+INV-013;Luz / efeito móvel;Mini Moving Beam LED;4;un;15R - marca não informada;Moving Beam igualado a Mini Moving LED;Confirmar descrição;Confirmar se são quatro equipamentos
+INV-014;Luz / PAR;PAR LED 64;6;un;Islink;36 LEDs;Confirmar grafia;Fotografar etiqueta
+INV-015;Luz / estrobo;Estrobo;3;un;1000 Turbo;2000 W informados;Confirmar especificação;Confirmar marca e potência nominal
+INV-016;Luz / laser;Laser de quatro cores;1;un;Mak Áudio;Quatro cores;Confirmar grafia;Confirmar modelo, potência e segurança
+INV-017;Luz / controle;Mesa ou controladora DMX;4;un;Master 512;512 canais a confirmar;Informado;Confirmar marca e modelo
+INV-018;Luz / efeito;Globo de vidro com motor;1;un;Não informado;40 - confirmar se centímetros;Confirmar especificação;Confirmar diâmetro, motor e acessórios
+INV-019;Energia / proteção;Régua protetora de energia;2;un;Delanha Metaltex - grafia pouco legível;8 vias;Confirmar grafia;Enviar foto da etiqueta e conexões
+INV-020;Sinalização;Buzina para campeonato de surf;2;un;Não informado;Tipo e acionamento não informados;Informado;Confirmar alimentação e controle

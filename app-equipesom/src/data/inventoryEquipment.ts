@@ -1,0 +1,41 @@
+import type { InventoryEquipment } from '../types/domain'
+
+/**
+ * Transcrição fiel dos registros INV-001 a INV-020 da aba 13_Inventario_Inicial,
+ * intervalo A4:J37, do inventário v0.2.0. Quantidades são informadas e não
+ * representam disponibilidade confirmada.
+ */
+export const inventoryEquipment: InventoryEquipment[] = [
+  { id: 'INV-001', category: 'Som / caixas', normalizedName: 'Caixa ativa', reportedQuantity: 14, inventoryUnit: 'un', informedBrandModel: 'Modelo não informado', informedSpecification: '600 — confirmar se o número representa watts', dataState: 'Informado', confirmationNeeded: 'Confirmar marca, modelo, tamanho e potência RMS.' },
+  { id: 'INV-002', category: 'Som / caixas', normalizedName: 'Caixa ativa EON 615', reportedQuantity: 2, inventoryUnit: 'un', informedBrandModel: 'EON 615', informedSpecification: 'Potência e fabricante não informados', dataState: 'Informado', confirmationNeeded: 'Fotografar etiqueta; não presumir fabricante.' },
+  { id: 'INV-003', category: 'Som / caixas', normalizedName: 'Subwoofer ativo', reportedQuantity: 2, inventoryUnit: 'un', informedBrandModel: 'Modelo não informado', informedSpecification: '1200 — confirmar unidade e potência RMS', dataState: 'Informado', confirmationNeeded: 'Confirmar marca, modelo e tamanho do falante.' },
+  { id: 'INV-004', category: 'Som / mixagem', normalizedName: 'Mesa de som', reportedQuantity: 2, inventoryUnit: 'un', informedBrandModel: 'Smart Vux 08 Pro', informedSpecification: '8 canais presumidos pelo nome; confirmar', dataState: 'Confirmar grafia', confirmationNeeded: 'Histórico usa SmartVox SV8PRO; enviar foto da etiqueta.' },
+  { id: 'INV-005', category: 'Som / mixagem', normalizedName: 'Mesa de som', reportedQuantity: 1, inventoryUnit: 'un', informedBrandModel: 'Behringer — modelo não informado', informedSpecification: '16 canais', dataState: 'Informado', confirmationNeeded: 'Confirmar modelo exato e entradas disponíveis.' },
+  { id: 'INV-006', category: 'Som / processamento', normalizedName: 'Equalizador', reportedQuantity: 2, inventoryUnit: 'un', informedBrandModel: 'Behringer — modelo não informado', informedSpecification: '32 bandas informadas', dataState: 'Confirmar especificação', confirmationNeeded: 'Histórico registra FBQ 31 Band; confirmar descrição técnica.' },
+  { id: 'INV-007', category: 'Som / processamento', normalizedName: 'Crossover', reportedQuantity: 2, inventoryUnit: 'un', informedBrandModel: 'Mak Áudio', informedSpecification: 'Modelo não informado', dataState: 'Confirmar grafia', confirmationNeeded: 'Históricos usam Mark Audio; fotografar marca e modelo.' },
+  { id: 'INV-008', category: 'Som / microfones', normalizedName: 'Kit de microfone sem fio duplo', reportedQuantity: 2, inventoryUnit: 'kit', informedBrandModel: 'Lincoln Duplo', informedSpecification: 'Quantidade de transmissores não confirmada', dataState: 'Informado', confirmationNeeded: 'Informar receptores, microfones e frequências por kit.' },
+  { id: 'INV-009', category: 'Som / microfones', normalizedName: 'Kit de microfone sem fio duplo', reportedQuantity: 1, inventoryUnit: 'kit', informedBrandModel: 'Lelong 906', informedSpecification: 'Quantidade de transmissores não confirmada', dataState: 'Informado', confirmationNeeded: 'Confirmar grafia, modelo e componentes do kit.' },
+  { id: 'INV-010', category: 'Som / microfones', normalizedName: 'Microfone com cabo XLR', reportedQuantity: 5, inventoryUnit: 'un', informedBrandModel: 'Não informado', informedSpecification: 'Conector XLR', dataState: 'Informado', confirmationNeeded: 'Confirmar marca, modelo e estado.' },
+  { id: 'INV-011', category: 'Energia / cabos', normalizedName: 'Extensão com fio 4 mm', reportedQuantity: 1, inventoryUnit: 'un', informedBrandModel: 'Não informado', informedSpecification: '40 metros', dataState: 'Informado', confirmationNeeded: 'Confirmar número de vias, conectores e bitola exata.' },
+  { id: 'INV-012', category: 'Energia / cabos', normalizedName: 'Extensão com fio 4 mm', reportedQuantity: 1, inventoryUnit: 'un', informedBrandModel: 'Não informado', informedSpecification: '45 metros', dataState: 'Informado', confirmationNeeded: 'Confirmar número de vias, conectores e bitola exata.' },
+  { id: 'INV-013', category: 'Luz / efeito móvel', normalizedName: 'Mini Moving Beam LED', reportedQuantity: 4, inventoryUnit: 'un', informedBrandModel: '15R — marca não informada', informedSpecification: 'A linha original equipara Moving Beam e Mini Moving LED', dataState: 'Confirmar descrição', confirmationNeeded: 'Confirmar se são quatro equipamentos, não dois grupos de quatro.' },
+  { id: 'INV-014', category: 'Luz / PAR', normalizedName: 'PAR LED 64', reportedQuantity: 6, inventoryUnit: 'un', informedBrandModel: 'Islink', informedSpecification: '36 LEDs', dataState: 'Confirmar grafia', confirmationNeeded: 'Fotografar etiqueta de marca, modelo e potência.' },
+  { id: 'INV-015', category: 'Luz / estrobo', normalizedName: 'Estrobo', reportedQuantity: 3, inventoryUnit: 'un', informedBrandModel: '1000 Turbo', informedSpecification: '2000 W informados', dataState: 'Confirmar especificação', confirmationNeeded: 'Confirmar marca, potência nominal e tipo de lâmpada/LED.' },
+  { id: 'INV-016', category: 'Luz / laser', normalizedName: 'Laser de quatro cores', reportedQuantity: 1, inventoryUnit: 'un', informedBrandModel: 'Mak Áudio', informedSpecification: 'Quatro cores', dataState: 'Confirmar grafia', confirmationNeeded: 'Confirmar marca, modelo, potência e classificação de segurança.' },
+  { id: 'INV-017', category: 'Luz / controle', normalizedName: 'Mesa/controladora DMX', reportedQuantity: 4, inventoryUnit: 'un', informedBrandModel: 'Master 512', informedSpecification: '512 canais informados pelo nome', dataState: 'Informado', confirmationNeeded: 'Confirmar marca e modelo exato.' },
+  { id: 'INV-018', category: 'Luz / efeito', normalizedName: 'Globo de vidro com motor', reportedQuantity: 1, inventoryUnit: 'un', informedBrandModel: 'Não informado', informedSpecification: '40 — confirmar se representa centímetros', dataState: 'Confirmar especificação', confirmationNeeded: 'Confirmar diâmetro, motor e acessórios.' },
+  { id: 'INV-019', category: 'Energia / proteção', normalizedName: 'Régua protetora de energia', reportedQuantity: 2, inventoryUnit: 'un', informedBrandModel: 'Delanha Metaltex — grafia pouco legível', informedSpecification: '8 vias', dataState: 'Confirmar grafia', confirmationNeeded: 'Enviar foto da etiqueta e das conexões.' },
+  { id: 'INV-020', category: 'Sinalização', normalizedName: 'Buzina para campeonato de surf', reportedQuantity: 2, inventoryUnit: 'un', informedBrandModel: 'Não informado', informedSpecification: 'Tipo e acionamento não informados', dataState: 'Informado', confirmationNeeded: 'Confirmar se são digitais, alimentação e controle.' },
+]
+
+export const inventoryCategories = [...new Set(inventoryEquipment.map((item) => item.category))]
+
+export const legacyEquipmentCatalog: InventoryEquipment[] = [
+  { id: 'som-principal', category: 'Item legado do protótipo', normalizedName: 'Sistema de som principal', reportedQuantity: 0, inventoryUnit: 'un', informedBrandModel: 'Não registrado', informedSpecification: 'Configuração genérica da versão anterior do protótipo', dataState: 'Legado', confirmationNeeded: 'Substituir por itens reconciliados do inventário quando possível.' },
+  { id: 'microfones', category: 'Item legado do protótipo', normalizedName: 'Microfones sem fio', reportedQuantity: 0, inventoryUnit: 'un', informedBrandModel: 'Não registrado', informedSpecification: 'Configuração genérica da versão anterior do protótipo', dataState: 'Legado', confirmationNeeded: 'Substituir por itens reconciliados do inventário quando possível.' },
+  { id: 'mesa', category: 'Item legado do protótipo', normalizedName: 'Mesa de áudio', reportedQuantity: 0, inventoryUnit: 'un', informedBrandModel: 'Não registrado', informedSpecification: 'Configuração genérica da versão anterior do protótipo', dataState: 'Legado', confirmationNeeded: 'Substituir por itens reconciliados do inventário quando possível.' },
+]
+
+export function getEquipmentById(id: string) {
+  return [...inventoryEquipment, ...legacyEquipmentCatalog].find((item) => item.id === id)
+}

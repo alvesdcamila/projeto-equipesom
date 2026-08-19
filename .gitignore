@@ -1,0 +1,28 @@
+# Dependências e artefatos de build
+node_modules/
+dist/
+coverage/
+
+# Variáveis locais e segredos
+.env
+.env.*
+!.env.example
+
+# Logs e caches
+*.log
+.eslintcache
+.vite/
+*.tsbuildinfo
+
+# Arquivos do sistema e editores
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+
+# Arquivos temporários
+*.tmp
+*.temp
+~$*
