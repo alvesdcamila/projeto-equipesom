@@ -5,6 +5,7 @@ import { ProposalSnapshotDetails } from '../components/proposals/ProposalSnapsho
 import { getProposalById } from '../services/proposalRepository'
 import type { ProposalStatus } from '../types/domain'
 import { isProposalEditable } from '../services/prototypeStorage'
+import { canPreviewProposal } from '../features/proposal-document/proposalDocumentMapper'
 
 const statusLabels: Record<ProposalStatus, string> = {
   rascunho: 'Rascunho',
@@ -31,6 +32,7 @@ export function ProposalDetailPage() {
   }
 
   const editingAvailable = isProposalEditable(proposal)
+  const previewAvailable = canPreviewProposal(proposal)
   const consultationNotice = proposal.source === 'demonstrativo'
     ? <><FlaskConical size={17} /> Conteúdo demonstrativo: esta proposta não pode ser editada.</>
     : proposal.status !== 'rascunho'
@@ -59,11 +61,18 @@ export function ProposalDetailPage() {
         </dl>
         <div className="consultation-only">
           <span>{consultationNotice}</span>
-          {editingAvailable && (
-            <Link className="proposal-detail__edit" to={`/propostas/${encodeURIComponent(proposal.id)}/editar`}>
-              <PencilLine size={16} /> Editar rascunho
-            </Link>
-          )}
+          <div className="proposal-detail__actions">
+            {previewAvailable && (
+              <Link className="proposal-detail__preview" to={`/propostas/${encodeURIComponent(proposal.id)}/previa`}>
+                <Eye size={16} /> Ver prévia visual
+              </Link>
+            )}
+            {editingAvailable && (
+              <Link className="proposal-detail__edit" to={`/propostas/${encodeURIComponent(proposal.id)}/editar`}>
+                <PencilLine size={16} /> Editar rascunho
+              </Link>
+            )}
+          </div>
         </div>
       </header>
 

@@ -28,6 +28,10 @@
 - Cláusulas dependem de revisão jurídica e tratamento tributário depende da contabilidade.
 - Fotos de pessoas ou de terceiros exigem autorização de uso comercial.
 
+## Operação local
+
+- Não interromper atualizadores, instaladores ou processos externos ao projeto, nem executar limpeza fora do workspace para liberar espaço, sem autorização explícita de Camila.
+
 ## Evidências, incertezas e decisões
 
 - Não apresentar como fato nenhuma informação que não possua base clara nos arquivos do projeto.

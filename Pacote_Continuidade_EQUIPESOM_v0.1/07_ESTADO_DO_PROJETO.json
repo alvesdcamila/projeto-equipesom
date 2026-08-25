@@ -1,9 +1,9 @@
 {
   "projeto": "EQUIPESOM - gerador de propostas para eventos",
-  "versao_contexto": "0.1",
-  "atualizado_em": "2026-08-03",
-  "fase": "descoberta e desenho do esqueleto",
-  "proximo_marco": "Fechar Gate 1 e produzir Modelo de Dados e Fluxos v0.2",
+  "versao_contexto": "0.2",
+  "atualizado_em": "2026-08-25",
+  "fase": "modelo de dados e fluxos v0.2 aprovado conceitualmente; esquema físico e hipóteses pendentes",
+  "proximo_marco": "Comparar banco, autenticação e armazenamento por critérios aprovados, sem instalar nem escolher fornecedor por presunção",
   "pessoas": {
     "camila": "responsável pelo projeto, organização e revisão",
     "edevaldo": "sócio, responsável operacional, assinatura e envio"
@@ -16,14 +16,34 @@
   },
   "decisoes_chave": [
     "SaaS multiempresa desde o início",
+    "EQUIPESOM será a primeira empresa cliente e não a marca da plataforma",
+    "Marca do SaaS ainda não definida",
     "Propostas emitidas são imutáveis",
     "Dados e modelos visuais são separados",
     "Assinatura do fornecedor e aceite do cliente são distintos",
+    "Eventos existem independentemente de propostas e podem ser históricos",
+    "Calendário distingue estados de Evento e Proposta",
+    "Desconto da EQUIPESOM é percentual sobre o subtotal anterior e guarda percentual e valor calculado",
+    "Proposta aceita origina acompanhamento financeiro",
+    "Valor proposto, aceito, final executado, ajustes e pagamentos permanecem separados",
+    "Relatório financeiro anual é material de apoio, não declaração tributária",
+    "Propostas suportam pelo menos três cláusulas sem texto jurídico inventado",
     "Pagamento em até 5 dias úteis após o fim do evento",
     "Validade padrão de 30 dias",
     "Pilares da marca: qualidade, comprometimento e parceria",
     "contato@equipesom.com.br sem senha compartilhada"
   ],
+  "modelo_dados_fluxos": {
+    "versao": "0.2",
+    "arquivo": "08_MODELO_DE_DADOS_E_FLUXOS_v0.2.md",
+    "status": "modelo conceitual aprovado por Camila; esquema físico e hipóteses pendentes",
+    "aprovado_conceitualmente_em": "2026-08-25",
+    "banco_escolhido": false,
+    "autenticacao_escolhida": false,
+    "armazenamento_escolhido": false,
+    "esquema_fisico_aprovado": false,
+    "migracao_local_storage_executada": false
+  },
   "inventario": {
     "status": "inicial e incompleto",
     "data_recebimento": "2026-08-03",
@@ -36,7 +56,9 @@
     ]
   },
   "nao_iniciar_como_definitivo": [
-    "programação completa antes do modelo de dados",
+    "implementação da fundação antes da escolha explícita de banco, autenticação e armazenamento",
+    "esquema físico baseado em hipóteses ou estados ainda pendentes",
+    "migração ou oficialização automática de dados do localStorage",
     "cláusulas sem revisão jurídica",
     "tratamento tributário sem contabilidade",
     "disponibilidade calculada a partir do inventário incompleto"

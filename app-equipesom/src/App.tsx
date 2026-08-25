@@ -6,6 +6,7 @@ import { PlaceholderPage } from './pages/PlaceholderPage'
 import { ProposalsPage } from './pages/ProposalsPage'
 import { ProposalDetailPage } from './pages/ProposalDetailPage'
 import { EditProposalPage } from './pages/EditProposalPage'
+import { ProposalPreviewPage } from './pages/ProposalPreviewPage'
 
 export function App() {
   return (
@@ -15,6 +16,7 @@ export function App() {
         <Route path="propostas" element={<ProposalsPage />} />
         <Route path="propostas/nova" element={<NewProposalPage />} />
         <Route path="propostas/:proposalId/editar" element={<EditProposalPage />} />
+        <Route path="propostas/:proposalId/previa" element={<ProposalPreviewPage />} />
         <Route path="propostas/:proposalId" element={<ProposalDetailPage />} />
         <Route
           path="agenda"

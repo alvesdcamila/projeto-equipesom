@@ -1,6 +1,6 @@
 # Roadmap e status — Projeto EQUIPESOM
 
-Atualizado em 03/08/2026
+Atualizado em 25/08/2026
 
 ## Concluído
 
@@ -31,9 +31,9 @@ Atualizado em 03/08/2026
 9. Consultar contabilidade sobre nome fantasia, telefone e impostos.
 10. Definir sinal, cancelamento, remarcação e clima.
 
-## Próximo entregável — Modelo de Dados e Fluxos v0.2
+## Entregável produzido — Modelo de Dados e Fluxos v0.2
 
-O documento deverá detalhar:
+O arquivo `08_MODELO_DE_DADOS_E_FLUXOS_v0.2.md` foi produzido em 22/08/2026 e aprovado por Camila em 25/08/2026 exclusivamente como modelo conceitual. O documento detalha:
 
 - entidades e relacionamentos;
 - campos obrigatórios e opcionais;
@@ -51,7 +51,24 @@ O documento deverá detalhar:
 - fluxo de criação pelo celular;
 - fluxo específico para cliente público.
 
-Critério de saída: Camila e Edevaldo conseguem acompanhar os fluxos em linguagem não técnica e aprovam o que o sistema deverá guardar e permitir.
+Critério de saída conceitual: Camila aprova as separações, os princípios e os requisitos confirmados que orientarão a comparação da fundação técnica.
+
+O critério de saída conceitual foi cumprido pela aprovação de Camila em 25/08/2026. A aprovação não encerra o Gate 1, não resolve hipóteses ou estados pendentes e não aprova fornecedor, esquema físico definitivo, textos jurídicos, tratamento contábil ou tributário, disponibilidade de equipamentos ou migração/oficialização de dados do `localStorage`.
+
+## Próximo passo imediato — revisão e preparação da fundação
+
+1. Produto transforma somente os pontos conceitualmente aprovados em critérios verificáveis para banco, autenticação e armazenamento de objetos.
+2. Candidatos reais são comparados por isolamento, transações, auditoria, backup, portabilidade, segurança, região, custo e operação, sem instalação nem escolha presumida.
+3. Camila decide o fornecedor somente depois de receber evidências, riscos, custos e alternativa de saída.
+4. Camila, Edevaldo, jurídico e contabilidade continuam resolvendo as pendências de seus respectivos domínios em paralelo.
+5. A implementação da fundação começa apenas depois do registro da escolha e de uma estratégia de migração que não oficialize dados simulados.
+
+## Requisitos confirmados com fase de implementação pendente
+
+- propostas aceitas originarão acompanhamento financeiro;
+- valor proposto, valor aceito, valor final executado, ajustes e pagamentos permanecerão separados;
+- haverá relatório financeiro anual de apoio, sem caráter de declaração tributária;
+- a proposta suportará pelo menos três cláusulas, mas os textos dependem de fonte e revisão jurídica.
 
 ## Depois do Modelo de Dados
 

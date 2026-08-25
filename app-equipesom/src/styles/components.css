@@ -527,7 +527,21 @@
 .proposal-detail__badges {
   display: flex;
   flex-wrap: wrap;
+  align-self: start;
+  align-items: center;
   gap: 0.4rem;
+}
+
+.proposal-detail__badges .status-pill,
+.proposal-detail__badges .source-pill {
+  display: inline-flex;
+  width: auto;
+  min-height: 25px;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  white-space: nowrap;
 }
 
 .proposal-detail__identity {
@@ -560,20 +574,37 @@
 }
 
 .consultation-only > span,
-.proposal-detail__edit {
+.proposal-detail__edit,
+.proposal-detail__preview {
   display: inline-flex;
   align-items: center;
   gap: 0.45rem;
 }
 
-.proposal-detail__edit {
+.proposal-detail__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.proposal-detail__edit,
+.proposal-detail__preview {
   min-height: 38px;
   padding: 0.55rem 0.75rem;
   border-radius: 11px;
-  color: var(--ocean-950);
-  background: var(--aqua-300);
   font-size: 0.7rem;
   font-weight: 850;
+}
+
+.proposal-detail__edit {
+  color: var(--ocean-950);
+  background: var(--aqua-300);
+}
+
+.proposal-detail__preview {
+  border: 1px solid rgba(255,255,255,0.3);
+  color: var(--white);
+  background: rgba(255,255,255,0.08);
 }
 
 .proposal-detail__sections {

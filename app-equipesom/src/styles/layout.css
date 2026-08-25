@@ -4,7 +4,7 @@
 
 .app-header {
   position: sticky;
-  z-index: 50;
+  z-index: 70;
   top: 0;
   border-bottom: 1px solid rgba(8, 63, 78, 0.08);
   background: rgba(251, 250, 246, 0.9);
@@ -59,6 +59,7 @@
 }
 
 .app-header__actions {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 0.45rem;
@@ -86,15 +87,169 @@
   font-weight: 800;
 }
 
-.notification-dot {
+.icon-button[aria-expanded='true'],
+.avatar-button[aria-expanded='true'] {
+  border-color: var(--aqua-500);
+  box-shadow: 0 0 0 3px rgba(37, 164, 160, 0.14);
+}
+
+.header-panel {
   position: absolute;
-  top: 7px;
-  right: 7px;
-  width: 7px;
-  height: 7px;
-  border: 2px solid var(--white);
+  z-index: 90;
+  top: calc(100% + 0.75rem);
+  right: 0;
+  width: min(22rem, calc(100vw - 2rem));
+  max-height: calc(100dvh - 10rem);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 1rem;
+  border: 1px solid rgba(8, 63, 78, 0.12);
+  border-radius: var(--radius-md);
+  color: var(--ink-900);
+  background: rgba(255, 255, 255, 0.99);
+  box-shadow: var(--shadow-md);
+}
+
+.header-panel:focus {
+  outline: 3px solid rgba(37, 164, 160, 0.28);
+  outline-offset: 2px;
+}
+
+.header-panel__heading {
+  margin-bottom: 0.8rem;
+}
+
+.header-panel__heading h2 {
+  margin: 0.12rem 0 0;
+  color: var(--ocean-950);
+  font-size: 1.08rem;
+}
+
+.header-panel__links {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.header-panel__links a,
+.header-panel__settings {
+  display: flex;
+  min-height: 42px;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.6rem 0.7rem;
+  border-radius: 11px;
+  color: var(--ocean-900);
+  background: var(--sand-50);
+  font-size: 0.8rem;
+  font-weight: 800;
+}
+
+.header-panel__links a:hover,
+.header-panel__settings:hover {
+  background: var(--aqua-100);
+}
+
+.header-panel__note,
+.header-panel__session-note {
+  margin: 0.8rem 0 0;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border);
+  color: var(--ink-700);
+  font-size: 0.72rem;
+  line-height: 1.45;
+}
+
+.header-panel__empty {
+  display: grid;
+  justify-items: center;
+  gap: 0.45rem;
+  padding: 1rem 0.75rem;
+  border-radius: 13px;
+  color: var(--ink-700);
+  background: var(--sand-50);
+  text-align: center;
+}
+
+.header-panel__empty svg {
+  color: var(--aqua-500);
+}
+
+.header-panel__empty strong {
+  color: var(--ocean-950);
+  font-size: 0.82rem;
+}
+
+.header-panel__empty p {
+  margin: 0;
+  font-size: 0.72rem;
+  line-height: 1.45;
+}
+
+.header-panel__profile-heading {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.header-panel__profile-heading h2 {
+  margin: 0;
+}
+
+.header-panel__profile-heading p {
+  margin: 0.1rem 0 0;
+  color: var(--ink-500);
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.header-panel__avatar {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  flex: 0 0 auto;
+  place-items: center;
   border-radius: 50%;
-  background: var(--coral-500);
+  color: var(--white);
+  background: var(--ocean-900);
+  font-size: 0.75rem;
+  font-weight: 850;
+}
+
+.header-panel__profile-summary {
+  margin: 0 0 0.65rem;
+  padding: 0.7rem;
+  border-radius: 11px;
+  background: var(--sand-50);
+}
+
+.header-panel__profile-summary div {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.header-panel__profile-summary dt,
+.header-panel__profile-summary dd {
+  margin: 0;
+  font-size: 0.75rem;
+}
+
+.header-panel__profile-summary dt {
+  color: var(--ink-500);
+}
+
+.header-panel__profile-summary dd {
+  color: var(--ocean-950);
+  font-weight: 850;
+}
+
+.header-panel__settings {
+  background: var(--aqua-100);
+}
+
+.header-panel__session-note {
+  text-align: center;
 }
 
 .app-main {
@@ -183,6 +338,39 @@
   }
 }
 
+@media (max-width: 380px) {
+  .app-header__inner {
+    padding-inline: 0.75rem;
+  }
+
+  .brand {
+    gap: 0.45rem;
+  }
+
+  .brand__mark,
+  .icon-button,
+  .avatar-button {
+    width: 36px;
+    height: 36px;
+  }
+
+  .brand__text strong {
+    font-size: 0.92rem;
+  }
+
+  .brand__text small {
+    display: none;
+  }
+
+  .app-header__actions {
+    gap: 0.3rem;
+  }
+
+  .header-panel {
+    width: calc(100vw - 1.5rem);
+  }
+}
+
 @media (min-width: 980px) {
   .app-header__inner {
     width: 100%;
@@ -194,6 +382,10 @@
   .app-main {
     margin-left: 88px;
     padding-bottom: 0;
+  }
+
+  .header-panel {
+    max-height: calc(100dvh - 6rem);
   }
 
   .mobile-nav {

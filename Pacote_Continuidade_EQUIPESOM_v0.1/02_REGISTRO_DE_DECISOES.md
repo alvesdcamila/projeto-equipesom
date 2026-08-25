@@ -1,6 +1,6 @@
 # Registro de decisões — Projeto EQUIPESOM
 
-Atualizado em 03/08/2026
+Atualizado em 25/08/2026
 
 | ID | Decisão | Estado | Observação |
 |---|---|---|---|
@@ -24,6 +24,17 @@ Atualizado em 03/08/2026
 | DEC-018 | O tipo de evento sugere itens, mas não fixa equipamentos | Confirmada | Pacotes serão editáveis. |
 | DEC-019 | Cláusulas serão versionadas e revisadas juridicamente | Confirmada | Textos atuais são preliminares. |
 | DEC-020 | Inventário inicial não controla disponibilidade ainda | Confirmada | Precisa de reconciliação, condição e propriedade. |
+| DEC-021 | Numeração oficial exibida no formato `EQ-AAAA-NNNN` | Confirmada | Ano com quatro dígitos e sequência com quatro dígitos e zeros à esquerda, por exemplo `EQ-2026-0001`. Rascunhos permanecem sem número oficial; atribuição transacional e imutável será definida no fluxo de emissão. |
+| DEC-022 | EQUIPESOM será a primeira empresa cliente do futuro SaaS e não a marca da plataforma | Confirmada | A marca do SaaS ainda não foi definida. |
+| DEC-023 | Para a EQUIPESOM, desconto será percentual sobre o subtotal anterior ao desconto | Confirmada para EQUIPESOM | A versão guardará o percentual e o valor monetário calculado; arredondamento e limites permanecem pendentes. |
+| DEC-024 | Eventos existirão independentemente de propostas e poderão registrar realizações anteriores ou externas ao sistema | Confirmada | Importação histórica não deve fabricar proposta, aceite ou financeiro sem evidência. |
+| DEC-025 | O calendário distinguirá o estado do Evento do estado das Propostas relacionadas | Confirmada | Nomes, cores e transições finais ainda dependem de validação. |
+| DEC-026 | Proposta aceita originará acompanhamento financeiro | Confirmada | Aceite não equivale automaticamente a contrato ou execução autorizada. |
+| DEC-027 | Valor proposto, valor aceito, valor final executado, ajustes e pagamentos permanecerão separados | Confirmada | Saldos e totais serão derivados sem sobrescrever o histórico. |
+| DEC-028 | O sistema oferecerá relatório financeiro anual de apoio | Confirmada como requisito | Não será apresentado como declaração tributária; critérios dependem da contabilidade. |
+| DEC-029 | A proposta suportará pelo menos três cláusulas, sem inventar ou publicar texto jurídico sem fonte e revisão | Confirmada | Capacidade mínima não significa obrigação de selecionar exatamente três cláusulas. |
+| DEC-030 | Pagamento, cancelamento/remarcação, energia, acesso e segurança são temas candidatos a cláusulas | Confirmada como escopo de análise | Redação, aplicação e exceções continuam pendentes de Camila, operação e jurídico. |
+| DEC-031 | Aprovar o Modelo de Dados e Fluxos v0.2 como modelo conceitual | Confirmada por Camila em 25/08/2026 | A aprovação não escolhe fornecedor de banco, autenticação ou armazenamento; não aprova esquema físico definitivo, hipóteses ou estados pendentes, textos jurídicos, tratamento contábil ou tributário, disponibilidade de equipamentos nem migração ou oficialização de dados do `localStorage`. |
 
 ## Decisões em aberto
 
