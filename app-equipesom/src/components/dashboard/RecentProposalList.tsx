@@ -5,6 +5,7 @@ import { formatCurrency, formatDate } from '../../utils/formatters'
 
 const statusLabels: Record<ProposalStatus, string> = {
   rascunho: 'Rascunho',
+  emitida: 'Emitida',
   enviada: 'Enviada',
   aceita: 'Aceita',
 }
@@ -43,7 +44,7 @@ export function RecentProposalList({ proposals, showHeading = true }: RecentProp
                 <span className={`source-pill source-pill--${proposal.source}`}>
                   {proposal.source === 'local' ? 'Salvo localmente' : 'Demonstração'}
                 </span>
-                <span>#{proposal.id.replace('prop-', '')} · v{proposal.version.versionNumber}</span>
+                <span>{proposal.version.proposalNumber ?? `#${proposal.id.replace('prop-', '')}`} · v{proposal.version.versionNumber}</span>
               </div>
               <h3>{proposal.version.eventName}</h3>
               <p>{proposal.version.clientName}</p>

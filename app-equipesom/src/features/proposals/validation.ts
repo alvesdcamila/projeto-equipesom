@@ -1,6 +1,8 @@
 import type { ProposalDraft } from '../../types/domain'
+import { isBrazilianStateCode } from '../../data/brazilianStates'
 import { isValidClientDocument, getClientDocumentLabel } from '../../utils/clientDocument'
 import { isValidBrazilianPilotPhone } from '../../utils/clientPhone'
+import { calculateDraftAmounts, isValidDiscountPercentage } from '../../utils/proposalAmounts'
 
 export type DraftField = keyof ProposalDraft
 export type ValidationErrors = Partial<Record<DraftField, string>>
@@ -34,6 +36,7 @@ export function validateStep(step: number, draft: ProposalDraft): ValidationErro
     }
     if (!draft.location.trim()) errors.location = 'Informe o local do evento.'
     if (!draft.city.trim()) errors.city = 'Informe a cidade.'
+    if (!isBrazilianStateCode(draft.eventState)) errors.eventState = 'Selecione a UF do evento.'
   }
 
   if (step === 2) {
@@ -45,11 +48,20 @@ export function validateStep(step: number, draft: ProposalDraft): ValidationErro
   }
 
   if (step === 3) {
-    const subtotal = draft.baseValue + draft.travelFee
-    const total = subtotal - draft.discount
-    if (total <= 0) errors.baseValue = 'O total da proposta deve ser maior que zero.'
-    if (draft.discount > subtotal) {
-      errors.discount = 'O desconto não pode ser maior que o valor-base somado ao deslocamento.'
+    if (draft.baseValue === null || !Number.isFinite(draft.baseValue) || draft.baseValue < 0) {
+      errors.baseValue = 'Informe um valor válido para equipamentos e serviços.'
+    }
+    if (draft.travelFee === null || !Number.isFinite(draft.travelFee) || draft.travelFee < 0) {
+      errors.travelFee = 'Informe um valor de deslocamento válido.'
+    }
+    if (!isValidDiscountPercentage(draft.discountPercentage)) {
+      errors.discountPercentage = draft.legacyFixedDiscount
+        ? 'Redefina o desconto antigo como percentual entre 0 e 100.'
+        : 'Informe um percentual de desconto entre 0 e 100.'
+    }
+    const amounts = calculateDraftAmounts(draft)
+    if (!errors.baseValue && !errors.travelFee && !errors.discountPercentage && amounts.total <= 0) {
+      errors.baseValue = 'O total da proposta deve ser maior que zero.'
     }
   }
 

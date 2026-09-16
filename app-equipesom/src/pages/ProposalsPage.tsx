@@ -10,6 +10,7 @@ type ProposalFilter = 'todas' | ProposalStatus
 const filters: Array<{ value: ProposalFilter; label: string }> = [
   { value: 'todas', label: 'Todas' },
   { value: 'rascunho', label: 'Rascunhos' },
+  { value: 'emitida', label: 'Emitidas' },
   { value: 'enviada', label: 'Enviadas' },
   { value: 'aceita', label: 'Aceitas' },
 ]

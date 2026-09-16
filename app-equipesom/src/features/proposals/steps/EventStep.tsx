@@ -1,4 +1,5 @@
 import { FieldError } from '../../../components/forms/FieldError'
+import { brazilianStates } from '../../../data/brazilianStates'
 import type { ProposalStepProps } from '../types'
 
 const eventTypes = [
@@ -60,7 +61,7 @@ export function EventStep({ draft, onChange, errors }: ProposalStepProps) {
           <input id="endDate" type="date" value={draft.endDate} onChange={(event) => onChange('endDate', event.target.value)} aria-invalid={Boolean(errors.endDate)} aria-describedby={errors.endDate ? 'endDate-error' : undefined} />
           <FieldError id="endDate-error" message={errors.endDate} />
         </label>
-        <label className={`form-field ${errors.location ? 'is-invalid' : ''}`} htmlFor="location">
+        <label className={`form-field form-field--full ${errors.location ? 'is-invalid' : ''}`} htmlFor="location">
           <span>Local <em>obrigatório</em></span>
           <input
             id="location"
@@ -73,11 +74,27 @@ export function EventStep({ draft, onChange, errors }: ProposalStepProps) {
           />
           <FieldError id="location-error" message={errors.location} />
         </label>
-        <label className={`form-field ${errors.city ? 'is-invalid' : ''}`} htmlFor="city">
-          <span>Cidade <em>obrigatório</em></span>
-          <input id="city" type="text" value={draft.city} onChange={(event) => onChange('city', event.target.value)} aria-invalid={Boolean(errors.city)} aria-describedby={errors.city ? 'city-error' : undefined} />
-          <FieldError id="city-error" message={errors.city} />
-        </label>
+        <div className="form-location-fields form-field--full">
+          <label className={`form-field ${errors.city ? 'is-invalid' : ''}`} htmlFor="city">
+            <span>Cidade <em>obrigatório</em></span>
+            <input id="city" type="text" value={draft.city} onChange={(event) => onChange('city', event.target.value)} aria-invalid={Boolean(errors.city)} aria-describedby={errors.city ? 'city-error' : undefined} />
+            <FieldError id="city-error" message={errors.city} />
+          </label>
+          <label className={`form-field form-field--uf ${errors.eventState ? 'is-invalid' : ''}`} htmlFor="eventState">
+            <span>UF <em>obrigatório</em></span>
+            <select
+              id="eventState"
+              value={draft.eventState}
+              onChange={(event) => onChange('eventState', event.target.value as typeof draft.eventState)}
+              aria-invalid={Boolean(errors.eventState)}
+              aria-describedby={errors.eventState ? 'eventState-error' : undefined}
+            >
+              <option value="">Selecione</option>
+              {brazilianStates.map((state) => <option key={state} value={state}>{state}</option>)}
+            </select>
+            <FieldError id="eventState-error" message={errors.eventState} />
+          </label>
+        </div>
       </div>
     </div>
   )

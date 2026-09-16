@@ -1,4 +1,7 @@
-export type ProposalStatus = 'rascunho' | 'enviada' | 'aceita'
+import type { BrazilianStateCode } from '../data/brazilianStates'
+
+export type ProposalStatus = 'rascunho' | 'emitida' | 'enviada' | 'aceita'
+export type ProposalDocumentThemeId = 'tecnico-litoraneo' | 'verao-profissional'
 export type ClientType = 'empresa' | 'pessoa' | 'orgao-publico'
 
 export interface PostalAddress {
@@ -67,6 +70,18 @@ export interface Proposal {
   status: ProposalStatus
   createdAt: string
   updatedAt: string
+  auditEvents: ProposalAuditEvent[]
+}
+
+export interface ProposalAuditEvent {
+  id: string
+  action: 'proposta_emitida'
+  occurredAt: string
+  actorName: string
+  versionId: string
+  proposalNumber: string
+  total: number
+  discountPercentage: number
 }
 
 export interface ProposalEquipmentSnapshot {
@@ -85,6 +100,37 @@ export interface ProposalServiceSnapshot {
   description: string
 }
 
+export interface LegacyFixedDiscountCompatibility {
+  model: 'fixed-legacy'
+  amount: number
+  originalTotal: number
+  sourceFormatVersion: 1 | 2 | 3 | 4
+  requiresPercentageReview: true
+}
+
+export type ProposalValuesSnapshot =
+  | {
+    pricingModel: 'percentage'
+    baseValue: number
+    travelFee: number
+    subtotalBeforeDiscount: number
+    discountPercentage: number
+    discountAmount: number
+    total: number
+    currency: 'BRL'
+    provisional: boolean
+  }
+  | {
+    pricingModel: 'legacy-fixed'
+    baseValue: number
+    travelFee: number
+    discount: number
+    total: number
+    currency: 'BRL'
+    provisional: boolean
+    sourceFormatVersion: 1 | 2 | 3 | 4
+  }
+
 export interface ProposalSnapshot {
   issuer?: ProposalIssuerSnapshot
   client: {
@@ -101,20 +147,14 @@ export interface ProposalSnapshot {
     endDate: string
     location: string
     city: string
+    state?: BrazilianStateCode
     estimatedAudience: string
   }
   scope: {
     equipment: ProposalEquipmentSnapshot[]
     services: ProposalServiceSnapshot[]
   }
-  values: {
-    baseValue: number
-    travelFee: number
-    discount: number
-    total: number
-    currency: 'BRL'
-    provisional: true
-  }
+  values: ProposalValuesSnapshot
   conditions: {
     validityDays: number
     paymentTerm: string
@@ -136,6 +176,8 @@ export interface ProposalVersion {
   eventDate: string
   total: number
   issuedAt?: string
+  proposalNumber?: string
+  documentThemeId?: ProposalDocumentThemeId
   snapshot?: ProposalSnapshot
 }
 
@@ -157,12 +199,14 @@ export interface ProposalDraft {
   endDate: string
   location: string
   city: string
+  eventState: BrazilianStateCode | ''
   estimatedAudience: string
   equipmentItems: EquipmentSelection[]
   serviceIds: string[]
-  baseValue: number
-  travelFee: number
-  discount: number
+  baseValue: number | null
+  travelFee: number | null
+  discountPercentage: number | null
+  legacyFixedDiscount?: LegacyFixedDiscountCompatibility
   validityDays: number
   paymentTerm: string
   mealsProvidedByClient: boolean

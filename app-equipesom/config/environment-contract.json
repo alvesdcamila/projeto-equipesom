@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "currentScope": "configuration-only-no-frontend-connection",
+  "environments": {
+    "local": {
+      "stage": "local",
+      "dataMode": "prototype-local",
+      "publicOriginPolicy": "loopback-only",
+      "dataPolicy": "fictional-or-browser-local-validation-only"
+    },
+    "homologation": {
+      "stage": "homologation",
+      "dataMode": "isolated-empty",
+      "publicOriginPolicy": "https-non-loopback-required-before-deployment",
+      "dataPolicy": "synthetic-only-after-separate-authorization"
+    },
+    "production": {
+      "stage": "production",
+      "dataMode": "isolated-empty",
+      "publicOriginPolicy": "https-non-loopback-required-before-deployment",
+      "dataPolicy": "no-data-until-production-authorization"
+    }
+  },
+  "clientVariables": [
+    "VITE_APP_ENV",
+    "VITE_DATA_MODE",
+    "VITE_PUBLIC_APP_ORIGIN",
+    "VITE_SUPABASE_URL",
+    "VITE_SUPABASE_PUBLISHABLE_KEY"
+  ],
+  "serverOnlySecretVariables": [
+    "SUPABASE_ACCESS_TOKEN",
+    "SUPABASE_DB_URL",
+    "SUPABASE_DB_PASSWORD",
+    "SUPABASE_SERVICE_ROLE_KEY"
+  ],
+  "forbiddenClientVariables": [
+    "VITE_SUPABASE_ACCESS_TOKEN",
+    "VITE_SUPABASE_DB_URL",
+    "VITE_SUPABASE_DB_PASSWORD",
+    "VITE_SUPABASE_SERVICE_ROLE_KEY"
+  ],
+  "reservedUntilFrontendConnectionIsAuthorized": [
+    "VITE_PUBLIC_APP_ORIGIN",
+    "VITE_SUPABASE_URL",
+    "VITE_SUPABASE_PUBLISHABLE_KEY"
+  ]
+}

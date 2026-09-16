@@ -175,6 +175,8 @@ A versão deve guardar, no mínimo:
 
 Permanecem pendentes a precisão de arredondamento, o intervalo permitido, o tratamento de acréscimos e a política de autorização além da regra já confirmada de Edevaldo para a EQUIPESOM. Essas definições não devem virar regra global do SaaS.
 
+Para a validação técnica do protótipo em 26/08/2026, o valor calculado do desconto e o total são arredondados para centavos, com percentual aceito entre 0 e 100. Essa implementação não resolve nem aprova a futura regra financeira global: a precisão física, a política de arredondamento, autorizações e exceções continuam pendentes para a fundação definitiva.
+
 ## 8. Modelos e cláusulas versionadas
 
 - Modelo e versão do modelo são entidades diferentes.
@@ -295,6 +297,8 @@ Nenhuma ausência de referência fiscal poderá ser apresentada como isenção, 
 
 PDF oficial, assinatura e escolha do provedor de objetos permanecem fora desta etapa.
 
+Em 27/08/2026, o protótipo passou a permitir somente a impressão nativa da prévia, identificada em todas as folhas como **PRÉVIA — NÃO EMITIDA**. Essa prova técnica não cria `ProposalVersion`, número, `issued_at`, hash, arquivo oficial, vínculo de objeto ou evento de emissão e não modifica as separações conceituais desta seção.
+
 ## 15. Auditoria
 
 Auditar, no mínimo:
@@ -343,7 +347,7 @@ Eventos simulados do protótipo não entram nesse fluxo como fatos operacionais.
 | Risco | Consequência | Controle recomendado |
 |---|---|---|
 | Conteúdo alterável pela pessoa ou pelo navegador | dado pode não representar fato ocorrido | tratar como fonte não confiável e exigir validação |
-| Formatos `v1` a `v4` e registros incompletos | perda, duplicação ou interpretação incorreta | normalização versionada e relatório por registro |
+| Formatos `v1` a `v5` e registros incompletos | perda, duplicação ou interpretação incorreta | normalização versionada e relatório por registro |
 | Mistura de demonstrativos e rascunhos reais | números fictícios podem virar operação oficial | classificar origem e bloquear promoção automática |
 | Ausência de transações | proposta e versão podem ficar parcialmente migradas | importar em transação por unidade lógica |
 | Identificadores locais e colisões | referências podem apontar para registros errados | mapa de identificadores e chaves idempotentes |
@@ -489,3 +493,5 @@ Após a revisão de Camila, o próximo documento deverá registrar:
 |---|---|---|
 | 0.2 | 22/08/2026 | Primeira consolidação do modelo conceitual e dos fluxos de Proposta, Evento e Financeiro, incluindo decisões confirmadas por Camila nesta conversa. |
 | 0.2 | 25/08/2026 | Aprovação conceitual por Camila, sem aprovação de fornecedor, esquema físico definitivo, hipóteses e estados pendentes, textos jurídicos, tratamento contábil ou tributário, disponibilidade de equipamentos ou migração/oficialização de dados do `localStorage`. |
+| 0.2 | 26/08/2026 | Registrada a regra técnica do protótipo para centavos e intervalo de 0% a 100%, sem promovê-la a regra financeira global; risco de migração atualizado para abranger o formato local `v5`. |
+| 0.2 | 27/08/2026 | Registrada a prova técnica de impressão da prévia, sem emissão, persistência, hash ou armazenamento de objeto e sem alteração do modelo conceitual de PDF oficial. |

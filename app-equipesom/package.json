@@ -5,10 +5,18 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "npm run verify:environment-contract && tsc -b && vite build",
     "lint": "eslint .",
     "typecheck": "tsc -b --pretty false",
+    "test": "node --max-old-space-size=512 scripts/verify-prototype.mjs",
+    "test:smtp-proof": "node server/smtp/smtpProof.test.mjs",
     "verify:prototype": "node --max-old-space-size=512 scripts/verify-prototype.mjs",
+    "verify:smtp-connection": "node --env-file=server/smtp/.env server/smtp/verifyHostopiaConnection.mjs",
+    "test:access-foundation": "supabase test db",
+    "verify:access-foundation:static": "node scripts/verify-access-foundation.mjs",
+    "verify:environment-contract": "node scripts/verify-environment-contract.mjs",
+    "start:access-foundation": "supabase start -x realtime,storage-api,imgproxy,studio,edge-runtime,logflare,vector,supavisor",
+    "export:access-foundation": "supabase db dump --local --schema public,private --file supabase/exports/access-foundation.sql",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -27,6 +35,8 @@
     "eslint-plugin-react-hooks": "7.1.1",
     "eslint-plugin-react-refresh": "0.5.4",
     "globals": "17.11.0",
+    "nodemailer": "^10.0.1",
+    "supabase": "^2.116.0",
     "typescript": "6.0.3",
     "typescript-eslint": "8.67.0",
     "vite": "8.2.1"

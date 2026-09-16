@@ -1,8 +1,6 @@
-import type { ProposalIssuerSnapshot } from '../../types/domain'
+import type { ProposalDocumentThemeId, ProposalIssuerSnapshot } from '../../types/domain'
 
-export type ProposalDocumentThemeId =
-  | 'tecnico-litoraneo'
-  | 'verao-profissional'
+export type { ProposalDocumentThemeId } from '../../types/domain'
 
 export interface ProposalDocumentTheme {
   id: ProposalDocumentThemeId
@@ -22,7 +20,7 @@ export type ProposalDocumentDateContext =
 
 export interface ProposalDocumentPlaceDate {
   context: 'documentPreview' | 'emittedDocument'
-  label: 'Local e data da prévia' | 'Local e data de emissão'
+  label: 'Local e data do documento' | 'Local e data de emissão'
   value: string
 }
 
@@ -46,7 +44,8 @@ export interface ProposalDocumentIssuedIdentification {
 }
 
 export interface ProposalDocumentData {
-  presentationContext: 'documentPreview'
+  presentationContext: 'documentPreview' | 'emittedDocument'
+  issuedIdentification?: ProposalDocumentIssuedIdentification
   issuer: ProposalIssuerSnapshot
   client: {
     name: string
@@ -61,6 +60,7 @@ export interface ProposalDocumentData {
     dateRange: string
     location: string
     city: string
+    state: string
     estimatedAudience: string
   }
   equipment: ProposalDocumentEquipment[]
@@ -68,7 +68,9 @@ export interface ProposalDocumentData {
   values: {
     baseValue: string
     travelFee: string
-    discount: string
+    subtotalBeforeDiscount: string
+    discountLabel: string
+    discountAmount: string
     total: string
   }
   conditions: {

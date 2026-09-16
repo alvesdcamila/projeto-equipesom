@@ -242,6 +242,14 @@
   gap: 1rem;
 }
 
+.form-location-fields {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 7rem;
+  gap: 1rem;
+}
+
+.form-field--uf select { text-align: center; }
+
 .form-field {
   display: block;
   min-width: 0;
@@ -370,6 +378,12 @@
 
 .info-banner {
   margin: 0 0 1.2rem;
+}
+
+.info-banner--warning {
+  border-color: #d9bd82;
+  color: #684d16;
+  background: #fff9eb;
 }
 
 .catalog-groups {

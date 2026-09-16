@@ -1,5 +1,7 @@
 import { getLegacyProposalAuthorName } from '../config/proposalAuthors'
 import { createIssuerSnapshot, pilotCompany } from '../config/company'
+import { normalizePilotDraftFreeTexts } from '../config/pilotTextNormalization'
+import { isBrazilianStateCode } from '../data/brazilianStates'
 import { createInitialProposalDraft } from '../data/mockData'
 import { getEquipmentById } from '../data/inventoryEquipment'
 import { getServiceById } from '../data/services'
@@ -7,17 +9,25 @@ import type {
   ActiveProposalDraft,
   ClientType,
   EquipmentSelection,
+  LegacyFixedDiscountCompatibility,
+  ProposalAuditEvent,
+  ProposalDocumentThemeId,
   ProposalDraft,
   ProposalListItem,
   ProposalIssuerSnapshot,
   ProposalSnapshot,
   ProposalStatus,
 } from '../types/domain'
+import { calculateDraftAmounts, isValidDiscountPercentage, roundMoney } from '../utils/proposalAmounts'
 
-const FORMAT_VERSION = 4
+const FORMAT_VERSION = 6
+type LegacyFormatVersion = 1 | 2 | 3 | 4
+type StoredFormatVersion = LegacyFormatVersion | 5
 export const PROTOTYPE_STORAGE_KEY_V1 = `equipesom:${pilotCompany.tenantId}:prototype:v1`
 export const PROTOTYPE_STORAGE_KEY_V2 = `equipesom:${pilotCompany.tenantId}:prototype:v2`
 export const PROTOTYPE_STORAGE_KEY_V3 = `equipesom:${pilotCompany.tenantId}:prototype:v3`
+export const PROTOTYPE_STORAGE_KEY_V4 = `equipesom:${pilotCompany.tenantId}:prototype:v4`
+export const PROTOTYPE_STORAGE_KEY_V5 = `equipesom:${pilotCompany.tenantId}:prototype:v5`
 export const PROTOTYPE_STORAGE_KEY = `equipesom:${pilotCompany.tenantId}:prototype:v${FORMAT_VERSION}`
 
 interface PrototypeState {
@@ -33,6 +43,8 @@ export interface PrototypeLoadResult {
   migratedFromV1?: boolean
   migratedFromV2?: boolean
   migratedFromV3?: boolean
+  migratedFromV4?: boolean
+  migratedFromV5?: boolean
 }
 
 const emptyState = (): PrototypeState => ({
@@ -47,6 +59,8 @@ const isRecord = (value: unknown): value is Record<string, unknown> =>
 const isString = (value: unknown): value is string => typeof value === 'string'
 const isFiniteNumber = (value: unknown): value is number =>
   typeof value === 'number' && Number.isFinite(value)
+const isNullableFiniteNumber = (value: unknown): value is number | null =>
+  value === null || isFiniteNumber(value)
 const isBoolean = (value: unknown): value is boolean => typeof value === 'boolean'
 const isStringArray = (value: unknown): value is string[] =>
   Array.isArray(value) && value.every(isString)
@@ -54,7 +68,9 @@ const isStringArray = (value: unknown): value is string[] =>
 const isClientType = (value: unknown): value is ClientType =>
   value === 'empresa' || value === 'pessoa' || value === 'orgao-publico'
 const isProposalStatus = (value: unknown): value is ProposalStatus =>
-  value === 'rascunho' || value === 'enviada' || value === 'aceita'
+  value === 'rascunho' || value === 'emitida' || value === 'enviada' || value === 'aceita'
+const isDocumentThemeId = (value: unknown): value is ProposalDocumentThemeId =>
+  value === 'tecnico-litoraneo' || value === 'verao-profissional'
 
 const normalizeEquipmentSelections = (
   value: unknown,
@@ -82,22 +98,65 @@ const normalizePreparedByName = (value: Record<string, unknown>): string => {
   return ''
 }
 
-const normalizeDraft = (value: unknown): ProposalDraft | null => {
+const createLegacyFixedDiscount = (
+  amount: number,
+  baseValue: number,
+  travelFee: number,
+  sourceFormatVersion: LegacyFormatVersion,
+  originalTotal = roundMoney(baseValue + travelFee - amount),
+): LegacyFixedDiscountCompatibility => ({
+  model: 'fixed-legacy',
+  amount: roundMoney(amount),
+  originalTotal: roundMoney(originalTotal),
+  sourceFormatVersion,
+  requiresPercentageReview: true,
+})
+
+const normalizeDraft = (value: unknown, sourceFormatVersion: StoredFormatVersion | 6): ProposalDraft | null => {
   if (!isRecord(value)) return null
 
   const requiredStrings = [
     'clientName', 'contactName', 'phone', 'eventName', 'eventType', 'startDate',
     'endDate', 'location', 'city', 'estimatedAudience', 'paymentTerm', 'commercialNotes',
   ]
-  const requiredNumbers = ['baseValue', 'travelFee', 'discount', 'validityDays']
   const requiredBooleans = ['mealsProvidedByClient', 'accommodationRequired']
 
   if (!requiredStrings.every((field) => isString(value[field]))
-    || !requiredNumbers.every((field) => isFiniteNumber(value[field]))
+    || !isNullableFiniteNumber(value.baseValue)
+    || !isNullableFiniteNumber(value.travelFee)
+    || !isFiniteNumber(value.validityDays)
     || !requiredBooleans.every((field) => isBoolean(value[field]))
     || !isClientType(value.clientType)) {
     return null
   }
+
+  const legacyDiscount = isFiniteNumber(value.discount) ? value.discount : 0
+  const existingLegacy = isRecord(value.legacyFixedDiscount)
+    && value.legacyFixedDiscount.model === 'fixed-legacy'
+    && isFiniteNumber(value.legacyFixedDiscount.amount)
+    && isFiniteNumber(value.legacyFixedDiscount.originalTotal)
+    && [1, 2, 3, 4].includes(Number(value.legacyFixedDiscount.sourceFormatVersion))
+    ? createLegacyFixedDiscount(
+      value.legacyFixedDiscount.amount,
+      isFiniteNumber(value.baseValue) ? value.baseValue : 0,
+      isFiniteNumber(value.travelFee) ? value.travelFee : 0,
+      value.legacyFixedDiscount.sourceFormatVersion as LegacyFormatVersion,
+      value.legacyFixedDiscount.originalTotal,
+    )
+    : undefined
+  const legacyFixedDiscount = existingLegacy ?? (
+    sourceFormatVersion <= 4 && legacyDiscount !== 0
+      ? createLegacyFixedDiscount(
+        legacyDiscount,
+        isFiniteNumber(value.baseValue) ? value.baseValue : 0,
+        isFiniteNumber(value.travelFee) ? value.travelFee : 0,
+        sourceFormatVersion as LegacyFormatVersion,
+      )
+      : undefined
+  )
+  const discountPercentage = isNullableFiniteNumber(value.discountPercentage)
+    ? value.discountPercentage
+    : legacyFixedDiscount ? null : 0
 
   const legacyIds = isStringArray(value.catalogItemIds) ? value.catalogItemIds : []
   const serviceIds = isStringArray(value.serviceIds)
@@ -117,12 +176,14 @@ const normalizeDraft = (value: unknown): ProposalDraft | null => {
     endDate: value.endDate as string,
     location: value.location as string,
     city: value.city as string,
+    eventState: isBrazilianStateCode(value.eventState) ? value.eventState : '',
     estimatedAudience: value.estimatedAudience as string,
     equipmentItems: normalizeEquipmentSelections(value.equipmentItems, legacyIds),
     serviceIds,
-    baseValue: value.baseValue as number,
-    travelFee: value.travelFee as number,
-    discount: value.discount as number,
+    baseValue: value.baseValue as number | null,
+    travelFee: value.travelFee as number | null,
+    discountPercentage,
+    legacyFixedDiscount,
     validityDays: value.validityDays as number,
     paymentTerm: value.paymentTerm as string,
     mealsProvidedByClient: value.mealsProvidedByClient as boolean,
@@ -167,7 +228,10 @@ const normalizeIssuer = (value: unknown): ProposalIssuerSnapshot | undefined => 
   }
 }
 
-const normalizeSnapshot = (value: unknown): ProposalSnapshot | undefined => {
+const normalizeSnapshot = (
+  value: unknown,
+  sourceFormatVersion: StoredFormatVersion | 6,
+): ProposalSnapshot | undefined => {
   if (!isRecord(value)
     || !isRecord(value.client)
     || !isRecord(value.event)
@@ -192,10 +256,27 @@ const normalizeSnapshot = (value: unknown): ProposalSnapshot | undefined => {
 
   if (value.issuer !== undefined && !issuer) return undefined
 
+  const hasPercentageValues = values.pricingModel === 'percentage'
+    && [
+      values.baseValue,
+      values.travelFee,
+      values.subtotalBeforeDiscount,
+      values.discountPercentage,
+      values.discountAmount,
+      values.total,
+    ].every(isFiniteNumber)
+    && isValidDiscountPercentage(values.discountPercentage)
+  const hasLegacyFixedValues = [
+    values.baseValue,
+    values.travelFee,
+    values.discount,
+    values.total,
+  ].every(isFiniteNumber)
+
   if (!isClientType(client.type)
     || ![client.name, client.document, client.contactName, client.phone].every(isString)
     || ![event.name, event.type, event.startDate, event.endDate, event.location, event.city, event.estimatedAudience].every(isString)
-    || ![values.baseValue, values.travelFee, values.discount, values.total].every(isFiniteNumber)
+    || !hasPercentageValues && !hasLegacyFixedValues
     || !isFiniteNumber(conditions.validityDays)
     || ![conditions.paymentTerm, conditions.commercialNotes].every(isString)
     || ![conditions.mealsProvidedByClient, conditions.accommodationRequired].every(isBoolean)) {
@@ -242,17 +323,32 @@ const normalizeSnapshot = (value: unknown): ProposalSnapshot | undefined => {
       endDate: event.endDate as string,
       location: event.location as string,
       city: event.city as string,
+      state: isBrazilianStateCode(event.state) ? event.state : undefined,
       estimatedAudience: event.estimatedAudience as string,
     },
     scope: { equipment, services },
-    values: {
-      baseValue: values.baseValue as number,
-      travelFee: values.travelFee as number,
-      discount: values.discount as number,
-      total: values.total as number,
-      currency: 'BRL',
-      provisional: true,
-    },
+    values: hasPercentageValues
+      ? {
+        pricingModel: 'percentage',
+        baseValue: values.baseValue as number,
+        travelFee: values.travelFee as number,
+        subtotalBeforeDiscount: values.subtotalBeforeDiscount as number,
+        discountPercentage: values.discountPercentage as number,
+        discountAmount: values.discountAmount as number,
+        total: values.total as number,
+        currency: 'BRL',
+        provisional: isBoolean(values.provisional) ? values.provisional : true,
+      }
+      : {
+        pricingModel: 'legacy-fixed',
+        baseValue: values.baseValue as number,
+        travelFee: values.travelFee as number,
+        discount: values.discount as number,
+        total: values.total as number,
+        currency: 'BRL',
+        provisional: isBoolean(values.provisional) ? values.provisional : true,
+        sourceFormatVersion: sourceFormatVersion <= 4 ? sourceFormatVersion as LegacyFormatVersion : 4,
+      },
     conditions: {
       validityDays: conditions.validityDays as number,
       paymentTerm: conditions.paymentTerm as string,
@@ -264,7 +360,10 @@ const normalizeSnapshot = (value: unknown): ProposalSnapshot | undefined => {
   }
 }
 
-const normalizeProposal = (value: unknown): ProposalListItem | null => {
+const normalizeProposal = (
+  value: unknown,
+  sourceFormatVersion: StoredFormatVersion | 6,
+): ProposalListItem | null => {
   if (!isRecord(value)
     || !isRecord(value.version)
     || !isString(value.id)
@@ -284,12 +383,31 @@ const normalizeProposal = (value: unknown): ProposalListItem | null => {
     return null
   }
 
-  const normalizedSnapshot = normalizeSnapshot(value.version.snapshot)
+  const normalizedSnapshot = normalizeSnapshot(value.version.snapshot, sourceFormatVersion)
   // Decisão de Camila: somente rascunhos locais completos e ainda mutáveis recebem
-  // a fotografia atual do emitente durante a migração para v4.
+  // a fotografia atual do emitente durante a migração iniciada em v4.
   const snapshot = value.status === 'rascunho' && normalizedSnapshot && !normalizedSnapshot.issuer
     ? { ...normalizedSnapshot, issuer: createIssuerSnapshot(pilotCompany) }
     : normalizedSnapshot
+  const auditEvents = Array.isArray(value.auditEvents)
+    ? value.auditEvents.flatMap((event): ProposalAuditEvent[] => {
+      if (!isRecord(event)
+        || event.action !== 'proposta_emitida'
+        || ![event.id, event.occurredAt, event.actorName, event.versionId, event.proposalNumber].every(isString)
+        || !isFiniteNumber(event.total)
+        || !isFiniteNumber(event.discountPercentage)) return []
+      return [{
+        id: event.id as string,
+        action: 'proposta_emitida',
+        occurredAt: event.occurredAt as string,
+        actorName: event.actorName as string,
+        versionId: event.versionId as string,
+        proposalNumber: event.proposalNumber as string,
+        total: event.total as number,
+        discountPercentage: event.discountPercentage as number,
+      }]
+    })
+    : []
 
   return {
     id: value.id,
@@ -299,6 +417,7 @@ const normalizeProposal = (value: unknown): ProposalListItem | null => {
     status: value.status,
     createdAt: value.createdAt,
     updatedAt: isString(value.updatedAt) ? value.updatedAt : value.createdAt,
+    auditEvents,
     source: 'local',
     version: {
       id: value.version.id,
@@ -309,12 +428,19 @@ const normalizeProposal = (value: unknown): ProposalListItem | null => {
       eventDate: value.version.eventDate,
       total: value.version.total,
       issuedAt: isString(value.version.issuedAt) ? value.version.issuedAt : undefined,
+      proposalNumber: isString(value.version.proposalNumber) ? value.version.proposalNumber : undefined,
+      documentThemeId: isDocumentThemeId(value.version.documentThemeId)
+        ? value.version.documentThemeId
+        : undefined,
       snapshot,
     },
   }
 }
 
-const normalizeState = (value: unknown): PrototypeState | null => {
+const normalizeState = (
+  value: unknown,
+  sourceFormatVersion: StoredFormatVersion | 6,
+): PrototypeState | null => {
   if (!isRecord(value)
     || value.tenantId !== pilotCompany.tenantId
     || !Array.isArray(value.localProposals)) {
@@ -326,7 +452,7 @@ const normalizeState = (value: unknown): PrototypeState | null => {
     if (!isRecord(value.activeDraft)
       || !isFiniteNumber(value.activeDraft.currentStep)
       || !isString(value.activeDraft.savedAt)) return null
-    const draft = normalizeDraft(value.activeDraft.draft)
+    const draft = normalizeDraft(value.activeDraft.draft, sourceFormatVersion)
     if (!draft) return null
     activeDraft = {
       draft,
@@ -343,7 +469,7 @@ const normalizeState = (value: unknown): PrototypeState | null => {
     tenantId: pilotCompany.tenantId,
     activeDraft,
     localProposals: value.localProposals.flatMap((proposal) => {
-      const normalized = normalizeProposal(proposal)
+      const normalized = normalizeProposal(proposal, sourceFormatVersion)
       return normalized ? [normalized] : []
     }),
   }
@@ -357,10 +483,13 @@ const getLocalStorage = (): Storage | null => {
   }
 }
 
-const parseStoredState = (serialized: string | null): PrototypeState | null => {
+const parseStoredState = (
+  serialized: string | null,
+  sourceFormatVersion: StoredFormatVersion | 6,
+): PrototypeState | null => {
   if (!serialized) return null
   try {
-    return normalizeState(JSON.parse(serialized) as unknown)
+    return normalizeState(JSON.parse(serialized) as unknown, sourceFormatVersion)
   } catch {
     return null
   }
@@ -385,7 +514,7 @@ export function loadPrototypeState(): PrototypeLoadResult {
 
   const currentSerialized = storage.getItem(PROTOTYPE_STORAGE_KEY)
   if (currentSerialized) {
-    const current = parseStoredState(currentSerialized)
+    const current = parseStoredState(currentSerialized, 6)
     if (current) return { state: current }
     return {
       state: emptyState(),
@@ -394,6 +523,8 @@ export function loadPrototypeState(): PrototypeLoadResult {
   }
 
   const legacyCandidates = [
+    { key: PROTOTYPE_STORAGE_KEY_V5, version: 5 as const },
+    { key: PROTOTYPE_STORAGE_KEY_V4, version: 4 as const },
     { key: PROTOTYPE_STORAGE_KEY_V3, version: 3 as const },
     { key: PROTOTYPE_STORAGE_KEY_V2, version: 2 as const },
     { key: PROTOTYPE_STORAGE_KEY_V1, version: 1 as const },
@@ -402,7 +533,7 @@ export function loadPrototypeState(): PrototypeLoadResult {
   for (const candidate of legacyCandidates) {
     const serialized = storage.getItem(candidate.key)
     if (!serialized) continue
-    const migrated = parseStoredState(serialized)
+    const migrated = parseStoredState(serialized, candidate.version)
     if (!migrated) {
       return {
         state: emptyState(),
@@ -416,6 +547,8 @@ export function loadPrototypeState(): PrototypeLoadResult {
       migratedFromV1: candidate.version === 1,
       migratedFromV2: candidate.version === 2,
       migratedFromV3: candidate.version === 3,
+      migratedFromV4: candidate.version === 4,
+      migratedFromV5: candidate.version === 5,
       issue: stored
         ? `Os dados salvos na versão v${candidate.version} foram preservados e atualizados para este protótipo.`
         : `Os dados da versão v${candidate.version} foram recuperados, mas não foi possível gravar o formato atualizado.`,
@@ -425,12 +558,17 @@ export function loadPrototypeState(): PrototypeLoadResult {
   return { state: emptyState() }
 }
 
-const trimPreparedByName = (draft: ProposalDraft): ProposalDraft => ({
-  ...draft,
-  preparedByName: draft.preparedByName.trim(),
-  equipmentItems: draft.equipmentItems.map((item) => ({ ...item })),
-  serviceIds: [...draft.serviceIds],
-})
+const normalizeDraftForSave = (draft: ProposalDraft): ProposalDraft => {
+  const normalized = normalizePilotDraftFreeTexts(draft)
+  return {
+    ...normalized,
+    legacyFixedDiscount: isValidDiscountPercentage(normalized.discountPercentage)
+      ? undefined
+      : normalized.legacyFixedDiscount ? { ...normalized.legacyFixedDiscount } : undefined,
+    equipmentItems: normalized.equipmentItems.map((item) => ({ ...item })),
+    serviceIds: [...normalized.serviceIds],
+  }
+}
 
 export function saveActiveDraft(
   draft: ProposalDraft,
@@ -439,7 +577,7 @@ export function saveActiveDraft(
 ): ActiveProposalDraft | null {
   const current = loadPrototypeState().state
   const activeDraft: ActiveProposalDraft = {
-    draft: trimPreparedByName(draft),
+    draft: normalizeDraftForSave(draft),
     currentStep: Math.min(5, Math.max(0, currentStep)),
     savedAt: new Date().toISOString(),
     editingProposalId,
@@ -469,28 +607,35 @@ const cloneIssuerSnapshot = (issuer: ProposalIssuerSnapshot): ProposalIssuerSnap
 const createSnapshot = (
   draft: ProposalDraft,
   issuer = createIssuerSnapshot(pilotCompany),
-): ProposalSnapshot => {
-  const total = draft.baseValue + draft.travelFee - draft.discount
+): ProposalSnapshot | null => {
+  const normalizedDraft = normalizeDraftForSave(draft)
+  if (normalizedDraft.baseValue === null
+    || normalizedDraft.travelFee === null
+    || !isValidDiscountPercentage(normalizedDraft.discountPercentage)
+    || !isBrazilianStateCode(normalizedDraft.eventState)) return null
+
+  const amounts = calculateDraftAmounts(normalizedDraft)
   return {
     issuer: cloneIssuerSnapshot(issuer),
     client: {
-      name: draft.clientName.trim(),
-      type: draft.clientType,
-      document: draft.clientDocument,
-      contactName: draft.contactName.trim(),
-      phone: draft.phone.trim(),
+      name: normalizedDraft.clientName,
+      type: normalizedDraft.clientType,
+      document: normalizedDraft.clientDocument,
+      contactName: normalizedDraft.contactName,
+      phone: normalizedDraft.phone.trim(),
     },
     event: {
-      name: draft.eventName.trim(),
-      type: draft.eventType,
-      startDate: draft.startDate,
-      endDate: draft.endDate,
-      location: draft.location.trim(),
-      city: draft.city.trim(),
-      estimatedAudience: draft.estimatedAudience,
+      name: normalizedDraft.eventName,
+      type: normalizedDraft.eventType,
+      startDate: normalizedDraft.startDate,
+      endDate: normalizedDraft.endDate,
+      location: normalizedDraft.location,
+      city: normalizedDraft.city,
+      state: normalizedDraft.eventState,
+      estimatedAudience: normalizedDraft.estimatedAudience,
     },
     scope: {
-      equipment: draft.equipmentItems.map((selection) => {
+      equipment: normalizedDraft.equipmentItems.map((selection) => {
         const item = getEquipmentById(selection.catalogItemId)
         return {
           catalogItemId: selection.catalogItemId,
@@ -502,7 +647,7 @@ const createSnapshot = (
           dataState: item?.dataState ?? 'Não registrado',
         }
       }),
-      services: draft.serviceIds.map((serviceId) => {
+      services: normalizedDraft.serviceIds.map((serviceId) => {
         const service = getServiceById(serviceId)
         return {
           serviceId,
@@ -512,52 +657,70 @@ const createSnapshot = (
       }),
     },
     values: {
-      baseValue: draft.baseValue,
-      travelFee: draft.travelFee,
-      discount: draft.discount,
-      total,
+      pricingModel: 'percentage',
+      baseValue: amounts.baseValue,
+      travelFee: amounts.travelFee,
+      subtotalBeforeDiscount: amounts.subtotalBeforeDiscount,
+      discountPercentage: normalizedDraft.discountPercentage,
+      discountAmount: amounts.discountAmount,
+      total: amounts.total,
       currency: 'BRL',
       provisional: true,
     },
     conditions: {
-      validityDays: draft.validityDays,
-      paymentTerm: draft.paymentTerm,
-      mealsProvidedByClient: draft.mealsProvidedByClient,
-      accommodationRequired: draft.accommodationRequired,
-      commercialNotes: draft.commercialNotes.trim(),
+      validityDays: normalizedDraft.validityDays,
+      paymentTerm: normalizedDraft.paymentTerm,
+      mealsProvidedByClient: normalizedDraft.mealsProvidedByClient,
+      accommodationRequired: normalizedDraft.accommodationRequired,
+      commercialNotes: normalizedDraft.commercialNotes,
     },
-    preparedBy: { name: draft.preparedByName.trim() },
+    preparedBy: { name: normalizedDraft.preparedByName },
   }
 }
 
-const createDraftFromSnapshot = (snapshot: ProposalSnapshot): ProposalDraft => ({
-  clientName: snapshot.client.name,
-  clientType: snapshot.client.type,
-  clientDocument: snapshot.client.document,
-  contactName: snapshot.client.contactName,
-  phone: snapshot.client.phone,
-  preparedByName: snapshot.preparedBy.name,
-  eventName: snapshot.event.name,
-  eventType: snapshot.event.type,
-  startDate: snapshot.event.startDate,
-  endDate: snapshot.event.endDate,
-  location: snapshot.event.location,
-  city: snapshot.event.city,
-  estimatedAudience: snapshot.event.estimatedAudience,
-  equipmentItems: snapshot.scope.equipment.map((item) => ({
-    catalogItemId: item.catalogItemId,
-    quantity: item.quantity,
-  })),
-  serviceIds: snapshot.scope.services.map((item) => item.serviceId),
-  baseValue: snapshot.values.baseValue,
-  travelFee: snapshot.values.travelFee,
-  discount: snapshot.values.discount,
-  validityDays: snapshot.conditions.validityDays,
-  paymentTerm: snapshot.conditions.paymentTerm,
-  mealsProvidedByClient: snapshot.conditions.mealsProvidedByClient,
-  accommodationRequired: snapshot.conditions.accommodationRequired,
-  commercialNotes: snapshot.conditions.commercialNotes,
-})
+const createDraftFromSnapshot = (snapshot: ProposalSnapshot): ProposalDraft => {
+  const values = snapshot.values
+  const legacyFixedDiscount = values.pricingModel === 'percentage' || values.discount === 0
+    ? undefined
+    : createLegacyFixedDiscount(
+      values.discount,
+      values.baseValue,
+      values.travelFee,
+      values.sourceFormatVersion,
+      values.total,
+    )
+
+  return {
+    clientName: snapshot.client.name,
+    clientType: snapshot.client.type,
+    clientDocument: snapshot.client.document,
+    contactName: snapshot.client.contactName,
+    phone: snapshot.client.phone,
+    preparedByName: snapshot.preparedBy.name,
+    eventName: snapshot.event.name,
+    eventType: snapshot.event.type,
+    startDate: snapshot.event.startDate,
+    endDate: snapshot.event.endDate,
+    location: snapshot.event.location,
+    city: snapshot.event.city,
+    eventState: snapshot.event.state ?? '',
+    estimatedAudience: snapshot.event.estimatedAudience,
+    equipmentItems: snapshot.scope.equipment.map((item) => ({
+      catalogItemId: item.catalogItemId,
+      quantity: item.quantity,
+    })),
+    serviceIds: snapshot.scope.services.map((item) => item.serviceId),
+    baseValue: values.baseValue,
+    travelFee: values.travelFee,
+    discountPercentage: values.pricingModel === 'percentage' ? values.discountPercentage : legacyFixedDiscount ? null : 0,
+    legacyFixedDiscount,
+    validityDays: snapshot.conditions.validityDays,
+    paymentTerm: snapshot.conditions.paymentTerm,
+    mealsProvidedByClient: snapshot.conditions.mealsProvidedByClient,
+    accommodationRequired: snapshot.conditions.accommodationRequired,
+    commercialNotes: snapshot.conditions.commercialNotes,
+  }
+}
 
 export function isProposalEditable(proposal: ProposalListItem | undefined): boolean {
   return Boolean(proposal
@@ -591,6 +754,7 @@ export function completeActiveDraft(draft: ProposalDraft): ProposalListItem | nu
   const versionId = `${proposalId}-v1`
   const now = new Date().toISOString()
   const snapshot = createSnapshot(draft)
+  if (!snapshot) return null
 
   const proposal: ProposalListItem = {
     id: proposalId,
@@ -600,6 +764,7 @@ export function completeActiveDraft(draft: ProposalDraft): ProposalListItem | nu
     status: 'rascunho',
     createdAt: now,
     updatedAt: now,
+    auditEvents: [],
     source: 'local',
     version: {
       id: versionId,
@@ -638,6 +803,7 @@ export function updateExistingDraft(
     draft,
     existing.version.snapshot?.issuer ?? createIssuerSnapshot(pilotCompany),
   )
+  if (!snapshot) return null
   const updated: ProposalListItem = {
     ...existing,
     updatedAt: new Date().toISOString(),
@@ -654,6 +820,85 @@ export function updateExistingDraft(
   const localProposals = [...current.localProposals]
   localProposals[proposalIndex] = updated
   return writeState({ ...current, activeDraft: null, localProposals }) ? updated : null
+}
+
+const BRAZIL_TIME_ZONE = 'America/Sao_Paulo'
+
+function getIssueYear(date: Date): string {
+  return new Intl.DateTimeFormat('en', {
+    year: 'numeric',
+    timeZone: BRAZIL_TIME_ZONE,
+  }).format(date)
+}
+
+function createNextProposalNumber(proposals: ProposalListItem[], issuedAt: Date): string | null {
+  const year = getIssueYear(issuedAt)
+  const prefix = `EQ-${year}-`
+  const highestSequence = proposals.reduce((highest, proposal) => {
+    const number = proposal.version.proposalNumber
+    if (!number?.startsWith(prefix)) return highest
+    const sequence = Number(number.slice(prefix.length))
+    return Number.isInteger(sequence) ? Math.max(highest, sequence) : highest
+  }, 0)
+  const nextSequence = highestSequence + 1
+  return nextSequence <= 9999 ? `${prefix}${String(nextSequence).padStart(4, '0')}` : null
+}
+
+export function issueProposal(
+  proposalId: string,
+  documentThemeId: ProposalDocumentThemeId,
+  clock: () => Date = () => new Date(),
+): ProposalListItem | null {
+  if (!isDocumentThemeId(documentThemeId)) return null
+  const current = loadPrototypeState().state
+  const proposalIndex = current.localProposals.findIndex((item) =>
+    item.id === proposalId && item.tenantId === pilotCompany.tenantId)
+  if (proposalIndex < 0) return null
+
+  const existing = current.localProposals[proposalIndex]
+  if (!isProposalEditable(existing) || !existing.version.snapshot) return null
+  const issuedAtDate = clock()
+  if (Number.isNaN(issuedAtDate.getTime())) return null
+  const proposalNumber = createNextProposalNumber(current.localProposals, issuedAtDate)
+  if (!proposalNumber) return null
+
+  const issuedAt = issuedAtDate.toISOString()
+  const snapshot = existing.version.snapshot
+  const discountPercentage = snapshot.values.pricingModel === 'percentage'
+    ? snapshot.values.discountPercentage
+    : 0
+  const issued: ProposalListItem = {
+    ...existing,
+    status: 'emitida',
+    updatedAt: issuedAt,
+    auditEvents: [
+      ...existing.auditEvents,
+      {
+        id: `${existing.version.id}-emissao-${issuedAt}`,
+        action: 'proposta_emitida',
+        occurredAt: issuedAt,
+        actorName: snapshot.preparedBy.name,
+        versionId: existing.version.id,
+        proposalNumber,
+        total: snapshot.values.total,
+        discountPercentage,
+      },
+    ],
+    version: {
+      ...existing.version,
+      issuedAt,
+      proposalNumber,
+      documentThemeId,
+      snapshot: {
+        ...snapshot,
+        values: { ...snapshot.values, provisional: false },
+      },
+    },
+  }
+
+  const localProposals = [...current.localProposals]
+  localProposals[proposalIndex] = issued
+  return writeState({ ...current, activeDraft: null, localProposals }) ? issued : null
 }
 
 export function createCleanDraft(): ProposalDraft {

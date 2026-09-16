@@ -11,6 +11,8 @@ import type { ProposalSnapshot } from '../../types/domain'
 import { proposalPresentation, type ProposalPresentationContext } from '../../config/proposalPresentation'
 import { getClientDocumentLabel } from '../../utils/clientDocument'
 import { formatCurrency, formatDate } from '../../utils/formatters'
+import { formatCityState } from '../../utils/eventLocation'
+import { createPublicEquipmentDescription } from '../../utils/equipmentPresentation'
 import { DetailSection } from './DetailSection'
 import { IssuerHeader } from './IssuerHeader'
 
@@ -28,6 +30,11 @@ export function ProposalSnapshotDetails({
   presentationContext = 'internalDraft',
 }: ProposalSnapshotDetailsProps) {
   const presentation = proposalPresentation[presentationContext]
+  const values = snapshot.values
+  const subtotal = values.pricingModel === 'percentage'
+    ? values.subtotalBeforeDiscount
+    : values.baseValue + values.travelFee
+  const discountAmount = values.pricingModel === 'percentage' ? values.discountAmount : values.discount
 
   return (
     <div className="proposal-detail__sections">
@@ -56,7 +63,7 @@ export function ProposalSnapshotDetails({
           <DetailValue label="Data inicial" value={formatDate(snapshot.event.startDate)} />
           <DetailValue label="Data final" value={formatDate(snapshot.event.endDate)} />
           <DetailValue label="Local" value={snapshot.event.location} />
-          <DetailValue label="Cidade" value={snapshot.event.city} />
+          <DetailValue label="Cidade/UF" value={formatCityState(snapshot.event.city, snapshot.event.state)} />
           <DetailValue label="Público estimado" value={snapshot.event.estimatedAudience} />
         </div>
       </DetailSection>
@@ -68,10 +75,18 @@ export function ProposalSnapshotDetails({
               <article key={`${item.catalogItemId}-${item.quantity}`}>
                 <span className="detail-item-list__quantity">{item.quantity}×</span>
                 <div>
-                  <span className="detail-item-list__topline">{item.catalogItemId} · {item.category}</span>
+                  <span className="detail-item-list__topline">
+                    {presentationContext === 'internalDraft' ? `${item.catalogItemId} · ${item.category}` : item.category}
+                  </span>
                   <strong>{item.normalizedName}</strong>
-                  <p>{item.informedBrandModel} · {item.informedSpecification}</p>
-                  <small>Estado do dado: {item.dataState}</small>
+                  {presentationContext === 'internalDraft'
+                    ? (
+                      <>
+                        <p>{item.informedBrandModel} · {item.informedSpecification}</p>
+                        <small>Estado do dado: {item.dataState}</small>
+                      </>
+                    )
+                    : createPublicEquipmentDescription(item) && <p>{createPublicEquipmentDescription(item)}</p>}
                 </div>
               </article>
             ))}
@@ -95,7 +110,11 @@ export function ProposalSnapshotDetails({
         <div className="detail-grid detail-grid--values">
           <DetailValue label="Equipamentos e serviços" value={formatCurrency(snapshot.values.baseValue)} />
           <DetailValue label="Deslocamento" value={formatCurrency(snapshot.values.travelFee)} />
-          <DetailValue label="Desconto" value={formatCurrency(snapshot.values.discount)} />
+          <DetailValue label="Subtotal" value={formatCurrency(subtotal)} />
+          <DetailValue
+            label={values.pricingModel === 'percentage' ? `Desconto (${values.discountPercentage}%)` : 'Desconto fixo registrado'}
+            value={formatCurrency(discountAmount)}
+          />
           <DetailValue label="Total" value={formatCurrency(snapshot.values.total)} />
         </div>
         {presentation.notice && (

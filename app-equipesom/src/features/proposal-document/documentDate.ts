@@ -43,7 +43,7 @@ export function createProposalDocumentPlaceDate(
 
   return {
     context: dateContext.kind === 'preview' ? 'documentPreview' : 'emittedDocument',
-    label: dateContext.kind === 'preview' ? 'Local e data da prévia' : 'Local e data de emissão',
+    label: dateContext.kind === 'preview' ? 'Local e data do documento' : 'Local e data de emissão',
     value: `${location}, ${formatBrazilianLongDate(date)}`,
   }
 }

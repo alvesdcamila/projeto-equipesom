@@ -13,7 +13,7 @@ export function NewProposalPage() {
           <span className="eyebrow">Criação guiada</span>
           <h1>Nova proposta</h1>
         </div>
-        <div className="prototype-badge"><Sparkles size={15} /> Protótipo</div>
+        <div className="prototype-badge"><Sparkles size={15} /> EQUIPESOM</div>
       </div>
       <ProposalWizard />
     </div>

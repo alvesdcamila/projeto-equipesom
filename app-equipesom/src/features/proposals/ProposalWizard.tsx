@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { CheckCircle2, History, PencilLine, Plus, RotateCcw } from 'lucide-react'
 import { Link, useNavigate } from 'react-router-dom'
+import { normalizePilotDraftField } from '../../config/pilotTextNormalization'
 import {
   clearActiveDraft,
   completeActiveDraft,
@@ -12,6 +13,7 @@ import {
 } from '../../services/prototypeStorage'
 import type { ProposalDraft } from '../../types/domain'
 import { formatDateTime } from '../../utils/formatters'
+import { isValidDiscountPercentage } from '../../utils/proposalAmounts'
 import { ProposalStepActions } from './ProposalStepActions'
 import { ProposalStepIndicator } from './ProposalStepIndicator'
 import { ClientStep } from './steps/ClientStep'
@@ -66,7 +68,14 @@ export function ProposalWizard({ editingProposalId }: ProposalWizardProps) {
   const [completedProposalId, setCompletedProposalId] = useState<string | null>(null)
 
   const updateDraft: DraftUpdater = (field, value) => {
-    setDraft((current) => ({ ...current, [field]: value }))
+    const normalizedValue = normalizePilotDraftField(field, value)
+    setDraft((current) => ({
+      ...current,
+      [field]: normalizedValue,
+      ...(field === 'discountPercentage' && isValidDiscountPercentage(normalizedValue)
+        ? { legacyFixedDiscount: undefined }
+        : {}),
+    }))
     setErrors((current) => ({
       ...current,
       [field]: undefined,
@@ -166,17 +175,19 @@ export function ProposalWizard({ editingProposalId }: ProposalWizardProps) {
     return (
       <section className="completion-card" aria-live="polite">
         <div className="completion-card__icon"><CheckCircle2 size={34} /></div>
-        <span className="eyebrow">Fluxo concluído</span>
-        <h2>Rascunho adicionado às propostas</h2>
+        <span className="eyebrow">Rascunho concluído</span>
+        <h2>Proposta pronta para revisão final</h2>
         <p>
           O rascunho <strong>#{completedProposalId}</strong> foi salvo neste dispositivo.
-          Nada foi emitido, assinado ou enviado.
+          Confira o documento e escolha a direção de cor antes de emitir.
         </p>
         <div className="completion-card__actions">
           <button className="button button--secondary" type="button" onClick={() => setCompletedProposalId(null)}>
             <Plus size={18} /> Criar outra proposta
           </button>
-          <Link className="button button--primary" to="/propostas">Ver propostas</Link>
+          <Link className="button button--primary" to={`/propostas/${encodeURIComponent(completedProposalId)}/previa`}>
+            Revisar e emitir
+          </Link>
         </div>
       </section>
     )

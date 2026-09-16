@@ -6,6 +6,7 @@ import type {
   ProposalDocumentService,
 } from './types'
 import { formatIssuerAddress, getVisibleIssuerContacts } from '../../utils/issuerPresentation'
+import { formatCityState } from '../../utils/eventLocation'
 
 function DocumentField({ label, value }: { label: string; value: string }) {
   if (!value.trim()) return null
@@ -22,11 +23,20 @@ export function DocumentTitle({ data }: { data: ProposalDocumentData }) {
   )
 }
 
-export function DocumentContinuationHeader({ issuerBrandName }: { issuerBrandName: string }) {
+export function DocumentContinuationHeader({
+  issuerBrandName,
+  documentIdentification,
+}: {
+  issuerBrandName: string
+  documentIdentification?: string
+}) {
   return (
     <header className="proposal-document__continuation-header">
       <strong>{issuerBrandName}</strong>
-      <span>Proposta comercial — continuação</span>
+      <span>
+        Proposta comercial — continuação
+        {documentIdentification ? ` · ${documentIdentification}` : ''}
+      </span>
     </header>
   )
 }
@@ -73,7 +83,7 @@ export function DocumentPartiesAndEvent({ data }: { data: ProposalDocumentData }
         <dl className="proposal-document__fields">
           <DocumentField label="Tipo" value={data.event.type} />
           <DocumentField label="Data" value={data.event.dateRange} />
-          <DocumentField label="Local" value={`${data.event.location} · ${data.event.city}`} />
+          <DocumentField label="Local" value={`${data.event.location} · ${formatCityState(data.event.city, data.event.state)}`} />
           <DocumentField label="Público estimado" value={data.event.estimatedAudience} />
         </dl>
       </section>
@@ -149,7 +159,8 @@ export function DocumentCommercialSummary({ data }: { data: ProposalDocumentData
         <dl>
           <div><dt>Equipamentos e serviços</dt><dd>{data.values.baseValue}</dd></div>
           <div><dt>Deslocamento</dt><dd>{data.values.travelFee}</dd></div>
-          <div><dt>Desconto</dt><dd>− {data.values.discount}</dd></div>
+          <div><dt>Subtotal</dt><dd>{data.values.subtotalBeforeDiscount}</dd></div>
+          <div><dt>{data.values.discountLabel}</dt><dd>− {data.values.discountAmount}</dd></div>
           <div className="proposal-document__total"><dt>Total</dt><dd>{data.values.total}</dd></div>
         </dl>
       </section>

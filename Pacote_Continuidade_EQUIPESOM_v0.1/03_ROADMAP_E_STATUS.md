@@ -1,6 +1,6 @@
 # Roadmap e status — Projeto EQUIPESOM
 
-Atualizado em 25/08/2026
+Atualizado em 16/09/2026
 
 ## Concluído
 
@@ -55,13 +55,33 @@ Critério de saída conceitual: Camila aprova as separações, os princípios e 
 
 O critério de saída conceitual foi cumprido pela aprovação de Camila em 25/08/2026. A aprovação não encerra o Gate 1, não resolve hipóteses ou estados pendentes e não aprova fornecedor, esquema físico definitivo, textos jurídicos, tratamento contábil ou tributário, disponibilidade de equipamentos ou migração/oficialização de dados do `localStorage`.
 
-## Próximo passo imediato — revisão e preparação da fundação
+## Validação operacional local da proposta EQ-2026-0001 — aprovada por Camila em 16/09/2026
 
-1. Produto transforma somente os pontos conceitualmente aprovados em critérios verificáveis para banco, autenticação e armazenamento de objetos.
-2. Candidatos reais são comparados por isolamento, transações, auditoria, backup, portabilidade, segurança, região, custo e operação, sem instalação nem escolha presumida.
-3. Camila decide o fornecedor somente depois de receber evidências, riscos, custos e alternativa de saída.
-4. Camila, Edevaldo, jurídico e contabilidade continuam resolvendo as pendências de seus respectivos domínios em paralelo.
-5. A implementação da fundação começa apenas depois do registro da escolha e de uma estratégia de migração que não oficialize dados simulados.
+Camila confirmou explicitamente nesta conversa a aprovação da validação operacional local da proposta `EQ-2026-0001`. Essa confirmação encerra o marco de validação para a condução do projeto. O Codex verificou regras e fluxos por testes automatizados com dados sintéticos, mas não inspecionou o PDF real nem conferiu seus dados comerciais. A aprovação não comprova disponibilidade de equipamentos nem representa assinatura, envio ou aceite pelo Codex; assinatura e envio continuam sob responsabilidade de Edevaldo.
+
+O roteiro operacional que orientou esse marco permanece registrado abaixo:
+
+1. Camila preenche cliente, evento, escopo, valores e condições da proposta real pela rota **Nova proposta**.
+2. Camila e Edevaldo conferem o conteúdo e escolhem uma das duas direções de cor disponíveis.
+3. A ação explícita **Emitir proposta** atribui número, data e versão, congela o tema, registra auditoria e torna a versão imutável.
+4. A versão emitida é salva em PDF pela impressão nativa e conferida antes do envio externo, que continua sob responsabilidade de Edevaldo.
+5. Depois desta validação operacional, a prova local Supabase pode ser retomada para executar as 27 asserções pgTAP e gerar a exportação SQL somente se todas passarem.
+
+## Próximo passo imediato — concluir a prova multiempresa Supabase somente local
+
+Confirmar WSL2, Docker Linux e Supabase CLI, aplicar a migração local preparada e executar as 27 asserções pgTAP em PostgreSQL com dois tenants e dois usuários fictícios dentro de transação com `ROLLBACK`. A checagem estrutural não substitui essa execução. Gerar e conferir a exportação SQL do esquema somente se todas as asserções passarem. O resultado da prova e o contrato de configuração devem orientar a separação futura entre local, homologação e produção, sem conexão do frontend, segundo tenant operacional, dados reais, projeto externo, DNS ou publicação nesta etapa.
+
+## Emissão comercial local implementada em 04/09/2026
+
+- o documento comercial deixou de imprimir a identificação **PRÉVIA — NÃO EMITIDA**;
+- o preenchimento continua concluindo um rascunho editável, seguido por revisão explícita;
+- somente a ação **Emitir proposta** cria a numeração anual no formato aprovado `EQ-AAAA-NNNN`;
+- número, `issuedAt`, versão, tema visual e fotografia dos dados ficam vinculados à versão emitida;
+- a emissão registra responsável, instante, número, versão, total e percentual de desconto em auditoria local;
+- versões emitidas não podem ser editadas nem emitidas novamente;
+- o PDF exibe número, versão, data de emissão e data final da validade e usa nome de arquivo comercial;
+- assinatura do fornecedor, envio, aceite do cliente, contrato e disponibilidade permanecem separados;
+- a sequência é local ao navegador e ainda não oferece coordenação transacional entre dispositivos.
 
 ## Requisitos confirmados com fase de implementação pendente
 
@@ -69,6 +89,87 @@ O critério de saída conceitual foi cumprido pela aprovação de Camila em 25/0
 - valor proposto, valor aceito, valor final executado, ajustes e pagamentos permanecerão separados;
 - haverá relatório financeiro anual de apoio, sem caráter de declaração tributária;
 - a proposta suportará pelo menos três cláusulas, mas os textos dependem de fonte e revisão jurídica.
+
+## Evolução validável do protótipo em 26/08/2026
+
+- textos livres configurados para o piloto são persistidos e apresentados em maiúsculas, com exclusões explícitas para e-mail, senha, URL, identificadores, códigos, números e datas;
+- o Evento passou a exigir UF selecionada entre as 27 unidades federativas e a apresentar Cidade/UF; SC é somente o padrão inicial de novos rascunhos do piloto;
+- o desconto da EQUIPESOM passou a usar percentual sobre `valor base + deslocamento`, guardando subtotal, percentual, valor calculado e total;
+- o arredondamento em centavos é uma regra técnica desta validação do protótipo, sem aprovar uma regra financeira global do SaaS;
+- a persistência local evoluiu para `v5`, mantendo as chaves `v1` a `v4`; descontos fixos antigos e totais históricos não são reinterpretados, e rascunhos antigos exigem percentual e UF antes de nova conclusão;
+- campos monetários podem ficar vazios durante a digitação e normalizam zeros à esquerda, inclusive em conteúdo colado.
+
+Essas evoluções continuam sendo validação de experiência. Elas não escolhem fornecedor, não aprovam esquema físico e não oficializam dados do `localStorage`.
+
+## Prova técnica de PDF em 27/08/2026
+
+- a prévia pode abrir a impressão nativa do Chrome ou Edge depois que a paginação estiver estabilizada;
+- o navegador pode salvar as folhas A4 como PDF com texto selecionável, conforme sua implementação;
+- todas as folhas são identificadas como **PRÉVIA — NÃO EMITIDA**;
+- interface, controles, avisos internos e área de medição ficam fora da impressão;
+- a ação não cria emissão, número oficial, versão imutável, `issuedAt`, assinatura, aceite, arquivo oficial ou gravação persistente;
+- PDF oficial continua dependente da fundação, do fluxo transacional de emissão e do armazenamento de objetos ainda não escolhidos.
+
+### Correção de consistência móvel em 29/08/2026
+
+- a medição e a impressão usam geometria física A4 fixa de 210 × 297 mm, sem depender da largura da tela;
+- regras responsivas da interface não alteram grade, tipografia, espaçamento ou capacidade das folhas;
+- no celular, a prévia A4 permanece inteira dentro de um contêiner com rolagem horizontal;
+- carregamento de fonte, medição inválida e interrupção passam a terminar em erro controlado com nova tentativa, sem loading indefinido;
+- a mesma proposta média foi verificada com duas páginas e geometria idêntica em 1920, 1366, 430, 390 e 360 px, nos dois temas;
+- a correção continua restrita à prévia técnica e não altera emissão, dados persistidos ou escolha da futura fundação.
+
+### Investigação específica do Safari/iOS em 01/09/2026
+
+- o teste automatizado no Chromium continua produzindo duas folhas físicas para duas páginas lógicas nos dois temas, mas isso não valida o WebKit;
+- Camila confirmou em teste real que o Verão Profissional ainda intercala duas páginas de conteúdo com duas folhas quase vazias no iPhone/Safari;
+- a hipótese experimental de fragmentação do footer flexível não foi confirmada e a respectiva regra CSS foi revertida;
+- a auditoria encontrou duas páginas imprimíveis e uma folha auxiliar de medição no DOM; a auxiliar está sob `display: none !important` em impressão, mas o modo de diagnóstico agora permite confirmar o estilo efetivo no iPhone;
+- a ordem global é folha auxiliar, página real 1 e página real 2. A auxiliar e a página real 2 satisfazem `:last-child` porque pertencem a wrappers diferentes; no baseline, suas quebras calculadas são `auto`, enquanto somente a página real 1 recebe `page`/`always`;
+- não existem wrappers, alturas, footers ou regras de quebra exclusivos do Verão; a diferença estrutural relevante ainda não isolada está nos pseudo-elementos superiores de 9 mm e nos detalhes visuais do tema;
+- `?printDebug=1` expõe geometria, ordem DOM, `:last-child` e estilos copiáveis sem persistência;
+- os PDFs baseline e C medidos por Camila confirmaram uma área física A4 de 1191 × 1684 px, área usada pelo Safari de 1030 × 1411 px e folha lógica ajustada em 1030 × 1459 px; os 48 px excedentes formavam as folhas residuais;
+- quebras, `:last-child` e pseudo-elementos foram descartados como causa principal porque os dois temas e a última página com quebra `auto` apresentaram a mesma continuação;
+- iOS/WebKit agora recebe somente em impressão um canvas externo de 218 mm, calculado a partir do mínimo aproximado de 216,6 mm; o contêiner e as folhas permanecem em 209,8 mm e a altura lógica em 296,8 mm;
+- Chromium normal manteve duas páginas, canvas e folhas de 209,8 mm; com user agent iOS, somente canvas/documento passaram a 218 mm, as folhas e o medidor permaneceram inalterados e o PDF de controle continuou com duas páginas;
+- o diagnóstico informa atributo de plataforma e retângulos de viewport, documento, contêiner e folhas;
+- em 01/09/2026, Camila validou a correção no localhost e no iPhone/Safari: duas páginas lógicas passaram a gerar duas páginas físicas, sem as faixas residuais; o marco técnico da prévia PDF foi encerrado.
+
+### Fundação de acesso e separação multiempresa — evolução em 02/09/2026
+
+- criado `09_FUNDACAO_DE_ACESSO_E_TENANCY_v0.1.md` como preparação da próxima etapa;
+- plataforma, tenant, usuário, vínculo, papel e sessão permanecem conceitos separados;
+- EQUIPESOM será o primeiro tenant; Camila será uma identidade vinculada a ele, não o próprio tenant;
+- a primeira fatia deverá proteger as rotas atuais e carregar o tenant a partir da sessão e do vínculo autorizado;
+- a administração interna da plataforma não será misturada ao painel do cliente nem protegida apenas por menu oculto;
+- Supabase foi confirmado somente para uma prova descartável; a CLI `2.116.0` foi adicionada como dependência de desenvolvimento, sem SDK de autenticação no frontend;
+- criado `10_MATRIZ_DE_AVALIACAO_DA_FUNDACAO_v0.1.md` com comparação preliminar de Supabase, Firebase e AWS composta, baseada em fontes oficiais consultadas em 02/09/2026;
+- Supabase deixou de ser apenas candidato da prova após confirmação explícita de Camila; a tecnologia definitiva, orçamento e produção não foram escolhidos;
+- `sa-east-1` foi registrada como região pretendida de eventual ambiente hospedado, sem criação de projeto, contratação, DNS ou publicação;
+- uma migração local modela identidade, tenant, papel, vínculo, convite, ativação comercial, sessão, auditoria e uma tabela mínima protegida por RLS;
+- foram preparados 27 testes com dois tenants e dois usuários fictícios, mas a execução PostgreSQL e a exportação estão bloqueadas porque a virtualização necessária ao Docker Linux não está ativa;
+- a especificação vigente é `09_FUNDACAO_DE_ACESSO_E_TENANCY_v0.4.md`, e o resultado parcial está em `11_RELATORIO_DA_PROVA_TECNICA_SUPABASE_v0.1.md`.
+
+### Interface pública Console Group e separação de builds em 02/09/2026
+
+- Console Group foi confirmada por Camila como identidade da plataforma; EQUIPESOM continua como primeiro tenant e não aparece como dona do login;
+- as duas logos fornecidas foram incorporadas como ativos locais, sem dependência de endereço temporário ou serviço externo;
+- criada a rota pública `/login`, com e-mail individual, senha, recuperação visual, indicação do ambiente e explicação de que a empresa é carregada pelo vínculo autorizado;
+- o formulário não cria sessão fictícia: entrada e recuperação informam que a fundação real ainda depende da escolha do fornecedor;
+- o build local mantém acesso explícito ao protótipo demonstrativo; homologação e produção redirecionam as rotas de negócio para `/login` e não oferecem o atalho local;
+- a barreira atual é somente preventiva e compilada no frontend; isolamento real continua exigindo sessão, vínculo, autorização no servidor e políticas no banco;
+- a especificação vigente passa a ser `09_FUNDACAO_DE_ACESSO_E_TENANCY_v0.2.md`; a v0.1 foi preservada integralmente.
+
+### Hostname e caminhos de criação de acesso definidos em 02/09/2026
+
+- Camila definiu `app.consolegroup.com.br` como hostname pretendido da entrada da plataforma; propriedade, DNS, certificado e publicação ainda não foram comprovados;
+- o acesso poderá nascer por convite individual enviado a um e-mail previamente liberado pela administração ou por cadastro direto iniciado em **Criar conta**;
+- no convite, a pessoa cria a própria senha pelo link recebido; o token deverá ser individual, expirável, revogável e de uso único;
+- no cadastro direto, a identidade pode ser criada, mas o uso e o vínculo ativo dependem de contratação/pagamento válidos;
+- clientes captados diretamente pela Console Group poderão receber convite sem que o produto presuma uma compra automática pelo site;
+- criada a rota visual `/criar-conta`, sem envio de dados, criação real de identidade, pagamento ou sessão;
+- provedor de cobrança, planos, preços, período de teste, inadimplência, cancelamento, reembolso e momento da ativação permanecem decisões pendentes;
+- a v0.3 preserva esta decisão; a especificação vigente da prova passa a ser `09_FUNDACAO_DE_ACESSO_E_TENANCY_v0.4.md`, sem substituir as versões anteriores.
 
 ## Depois do Modelo de Dados
 

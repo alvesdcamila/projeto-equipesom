@@ -1,0 +1,2 @@
+-- A prova usa dados autocontidos e transacionais em tests/database.
+-- Nenhum dado da EQUIPESOM, PDF, CNPJ ou conteúdo do navegador é carregado aqui.

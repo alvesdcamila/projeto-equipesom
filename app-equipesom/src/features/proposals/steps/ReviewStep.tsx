@@ -16,6 +16,8 @@ import { IssuerHeader } from '../../../components/proposals/IssuerHeader'
 import type { ProposalDraft } from '../../../types/domain'
 import { getClientDocumentLabel } from '../../../utils/clientDocument'
 import { formatCurrency, formatDate } from '../../../utils/formatters'
+import { formatCityState } from '../../../utils/eventLocation'
+import { calculateDraftAmounts } from '../../../utils/proposalAmounts'
 import type { ValidationIssueGroup } from '../validation'
 
 interface ReviewStepProps {
@@ -31,7 +33,7 @@ export function ReviewStep({ draft, onEdit, issues, isEditing = false }: ReviewS
     item: getEquipmentById(selection.catalogItemId),
   }))
   const services = draft.serviceIds.map((serviceId) => getServiceById(serviceId)).filter(Boolean)
-  const total = Math.max(0, draft.baseValue + draft.travelFee - draft.discount)
+  const amounts = calculateDraftAmounts(draft)
   const documentLabel = getClientDocumentLabel(draft.clientType)
 
   const sections = [
@@ -54,7 +56,7 @@ export function ReviewStep({ draft, onEdit, issues, isEditing = false }: ReviewS
       icon: CalendarDays,
       step: 1,
       content: draft.eventName || draft.eventType,
-      detail: `${formatDate(draft.startDate)} · ${draft.location || draft.city}`,
+      detail: `${formatDate(draft.startDate)} · ${draft.location || 'local não informado'} · ${formatCityState(draft.city, draft.eventState) || 'cidade/UF pendente'}`,
     },
     {
       title: 'Escopo',
@@ -67,8 +69,12 @@ export function ReviewStep({ draft, onEdit, issues, isEditing = false }: ReviewS
       title: 'Valor provisório',
       icon: CircleDollarSign,
       step: 3,
-      content: formatCurrency(total),
-      detail: draft.discount > 0 ? `Inclui ${formatCurrency(draft.discount)} de desconto` : 'Sem desconto aplicado',
+      content: formatCurrency(amounts.total),
+      detail: amounts.pricingModel === 'legacy-fixed'
+        ? `Desconto fixo anterior de ${formatCurrency(amounts.discountAmount)} precisa ser redefinido`
+        : amounts.discountAmount > 0
+          ? `Desconto de ${amounts.discountPercentage}% (${formatCurrency(amounts.discountAmount)})`
+          : 'Sem desconto aplicado',
     },
     {
       title: 'Condições',
@@ -87,7 +93,7 @@ export function ReviewStep({ draft, onEdit, issues, isEditing = false }: ReviewS
         <p>
           {isEditing
             ? 'Ao salvar, os dados deste rascunho local serão atualizados sem criar outra versão.'
-            : 'Ao concluir, a demonstração apenas cria um rascunho local. Nenhuma proposta será emitida ou enviada.'}
+            : 'Ao concluir, o rascunho ficará pronto para a revisão final e a emissão da proposta.'}
         </p>
       </div>
 

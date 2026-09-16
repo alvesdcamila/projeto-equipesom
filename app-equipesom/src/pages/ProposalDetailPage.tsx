@@ -5,10 +5,12 @@ import { ProposalSnapshotDetails } from '../components/proposals/ProposalSnapsho
 import { getProposalById } from '../services/proposalRepository'
 import type { ProposalStatus } from '../types/domain'
 import { isProposalEditable } from '../services/prototypeStorage'
-import { canPreviewProposal } from '../features/proposal-document/proposalDocumentMapper'
+import { canOpenProposalDocument } from '../features/proposal-document/proposalDocumentMapper'
+import { formatDateTime } from '../utils/formatters'
 
 const statusLabels: Record<ProposalStatus, string> = {
   rascunho: 'Rascunho',
+  emitida: 'Emitida',
   enviada: 'Enviada',
   aceita: 'Aceita',
 }
@@ -32,7 +34,7 @@ export function ProposalDetailPage() {
   }
 
   const editingAvailable = isProposalEditable(proposal)
-  const previewAvailable = canPreviewProposal(proposal)
+  const documentAvailable = canOpenProposalDocument(proposal)
   const consultationNotice = proposal.source === 'demonstrativo'
     ? <><FlaskConical size={17} /> Conteúdo demonstrativo: esta proposta não pode ser editada.</>
     : proposal.status !== 'rascunho'
@@ -58,13 +60,15 @@ export function ProposalDetailPage() {
         <dl className="proposal-detail__identity">
           <div><dt>Identificador</dt><dd>{proposal.id}</dd></div>
           <div><dt>Versão</dt><dd>v{proposal.version.versionNumber}</dd></div>
+          {proposal.version.proposalNumber && <div><dt>Número oficial</dt><dd>{proposal.version.proposalNumber}</dd></div>}
+          {proposal.version.issuedAt && <div><dt>Emitida em</dt><dd>{formatDateTime(proposal.version.issuedAt)}</dd></div>}
         </dl>
         <div className="consultation-only">
           <span>{consultationNotice}</span>
           <div className="proposal-detail__actions">
-            {previewAvailable && (
+            {documentAvailable && (
               <Link className="proposal-detail__preview" to={`/propostas/${encodeURIComponent(proposal.id)}/previa`}>
-                <Eye size={16} /> Ver prévia visual
+                <Eye size={16} /> {proposal.status === 'rascunho' ? 'Revisar e emitir' : 'Abrir PDF da proposta'}
               </Link>
             )}
             {editingAvailable && (

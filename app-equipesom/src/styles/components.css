@@ -296,6 +296,7 @@
 .source-pill--local { color: var(--ocean-700); background: var(--aqua-100); }
 
 .status-pill--rascunho { color: #805617; background: #fff1d4; }
+.status-pill--emitida { color: #4f3478; background: #eee7fb; }
 .status-pill--enviada { color: var(--ocean-700); background: var(--aqua-100); }
 .status-pill--aceita { color: var(--success); background: #e2f3e8; }
 
