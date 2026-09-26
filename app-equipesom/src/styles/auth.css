@@ -218,6 +218,81 @@
   line-height: 1.55;
 }
 
+.login-card__intro .login-card__b3-label {
+  margin-top: 0.75rem;
+  color: var(--console-wine);
+  font-weight: 700;
+}
+
+.login-form__submit:disabled {
+  cursor: wait;
+  opacity: 0.7;
+  transform: none;
+}
+
+.b3-readonly-page {
+  min-height: 100dvh;
+  background: #f7f7f8;
+}
+
+.b3-readonly-page__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.25rem clamp(1rem, 4vw, 3rem);
+  border-bottom: 1px solid #e0e1e4;
+  background: #fff;
+}
+
+.b3-readonly-page__header img { width: 10rem; }
+.b3-readonly-page__header button {
+  padding: 0.55rem 0.8rem;
+  border: 1px solid #d8dade;
+  border-radius: 0.6rem;
+  color: #5f2938;
+  background: #fff;
+  cursor: pointer;
+}
+
+.b3-readonly-page__content {
+  width: min(100%, 58rem);
+  margin: 0 auto;
+  padding: clamp(1.5rem, 5vw, 3rem);
+}
+
+.b3-readonly-page__content h1 { margin: 0.35rem 0 0.7rem; }
+.b3-readonly-page__separation {
+  padding: 0.85rem;
+  border-left: 3px solid #8f1735;
+  background: #fff;
+}
+.b3-readonly-page__separation a { color: #8f1735; font-weight: 750; }
+.b3-readonly-page__context {
+  display: grid;
+  gap: 0.5rem;
+  margin: 1.5rem 0;
+}
+.b3-readonly-page__context label { font-weight: 750; }
+.b3-readonly-page__context select {
+  max-width: 25rem;
+  padding: 0.65rem;
+  border: 1px solid #d8dade;
+  border-radius: 0.6rem;
+  background: #fff;
+}
+.b3-readonly-page__error { color: #8f1735; }
+.b3-readonly-page__list { display: grid; gap: 0.75rem; padding: 0; list-style: none; }
+.b3-readonly-page__list li {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  padding: 1rem;
+  border: 1px solid #e0e1e4;
+  border-radius: 0.75rem;
+  background: #fff;
+}
+
 .login-form {
   display: grid;
   gap: 1.15rem;

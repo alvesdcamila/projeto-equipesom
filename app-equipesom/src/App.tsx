@@ -10,12 +10,18 @@ import { ProposalPreviewPage } from './pages/ProposalPreviewPage'
 import { LoginPage } from './pages/LoginPage'
 import { PrototypeAccessBoundary } from './components/auth/PrototypeAccessBoundary'
 import { CreateAccountPage } from './pages/CreateAccountPage'
+import { B3LocalSessionProvider } from './components/auth/B3LocalSession'
+import { B3LocalAccessBoundary } from './components/auth/B3LocalAccessBoundary'
+import { B3LocalProposalsPage } from './pages/B3LocalProposalsPage'
 
 export function App() {
   return (
-    <Routes>
+    <B3LocalSessionProvider><Routes>
       <Route path="login" element={<LoginPage />} />
       <Route path="criar-conta" element={<CreateAccountPage />} />
+      <Route element={<B3LocalAccessBoundary />}>
+        <Route path="acesso-local/propostas" element={<B3LocalProposalsPage />} />
+      </Route>
       <Route element={<PrototypeAccessBoundary />}>
         <Route element={<AppShell />}>
           <Route index element={<DashboardPage />} />
@@ -47,6 +53,6 @@ export function App() {
         </Route>
       </Route>
       <Route path="*" element={<Navigate to="/login" replace />} />
-    </Routes>
+    </Routes></B3LocalSessionProvider>
   )
 }

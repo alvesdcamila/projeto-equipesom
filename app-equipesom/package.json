@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:b3": "node scripts/start-b3-local.mjs",
     "build": "npm run verify:environment-contract && tsc -b && vite build",
     "lint": "eslint .",
     "typecheck": "tsc -b --pretty false",
@@ -14,6 +15,9 @@
     "verify:smtp-connection": "node --env-file=server/smtp/.env server/smtp/verifyHostopiaConnection.mjs",
     "test:access-foundation": "supabase test db",
     "verify:access-foundation:static": "node scripts/verify-access-foundation.mjs",
+    "verify:local-auth": "node scripts/verify-local-auth.mjs",
+    "verify:b3-readonly": "node scripts/verify-b3-readonly.mjs",
+    "verify:b2-concurrency": "node scripts/verify-b2-counter-concurrency.mjs",
     "verify:environment-contract": "node scripts/verify-environment-contract.mjs",
     "start:access-foundation": "supabase start -x realtime,storage-api,imgproxy,studio,edge-runtime,logflare,vector,supavisor",
     "export:access-foundation": "supabase db dump --local --schema public,private --file supabase/exports/access-foundation.sql",

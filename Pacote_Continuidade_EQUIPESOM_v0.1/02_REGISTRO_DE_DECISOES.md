@@ -1,6 +1,6 @@
 # Registro de decisões — Projeto EQUIPESOM
 
-Atualizado em 04/09/2026
+Atualizado em 16/09/2026
 
 | ID | Decisão | Estado | Observação |
 |---|---|---|---|
@@ -43,6 +43,10 @@ Atualizado em 04/09/2026
 | DEC-037 | A criação de acesso terá convite por e-mail e cadastro direto pela tela de login | Confirmada como direção por Camila em 02/09/2026 | O convite será emitido para clientes captados/autorizados pela administração. No cadastro direto, criar identidade não libera uso: a ativação depende de pagamento/contratação. Provedor, planos, valores, regras de cobrança e detalhes dos convites continuam pendentes. |
 | DEC-038 | Usar Supabase como fornecedor da prova técnica, com futura região hospedada São Paulo (`sa-east-1`) | Confirmada por Camila em 02/09/2026 | A autorização cobre prova descartável com dois tenants e usuários fictícios, sem plano pago, publicação, DNS ou dados reais. A prova começa localmente; eventual projeto externo não poderá ser criado sem confirmação no momento de gerar credenciais nem excluído sem nova autorização explícita. |
 | DEC-039 | Habilitar no protótipo local a emissão operacional de propostas comerciais da EQUIPESOM | Confirmada por Camila em 04/09/2026 | O rascunho é revisado antes da emissão; a ação explícita atribui a sequência anual `EQ-AAAA-NNNN`, grava data, versão, tema e auditoria, torna a versão imutável e libera o PDF sem marca de prévia. A sequência local atende ao uso atual em um navegador e não substitui a futura numeração transacional no banco. |
+| DEC-040 | Camila será a única administradora do sistema para chaves de acesso, autorizações de pessoas e trocas de credenciais | Confirmada por Camila em 16/09/2026 | Trabalho técnico pode ser executado sob sua direção, mas não transfere a custódia das chaves nem cria senha compartilhada. Edevaldo continua responsável pela operação, assinatura e envio de propostas, sem administração implícita da plataforma. |
+| DEC-041 | A futura homologação poderá usar dados reais durante testes em fases | Confirmada como direção por Camila em 16/09/2026 | Não autoriza transferência agora. Cada lote depende de autorização de Camila, acesso individual, isolamento, backup/restauração e identificação dos registros; testes negativos multiempresa continuam com dados fictícios. Não oficializar automaticamente dados do navegador. |
+| DEC-042 | Priorizar o backend local antes de investir em hospedagem; AWS é intenção futura | Confirmada como prioridade e intenção por Camila em 16/09/2026 | Não há orçamento disponível agora nem escolha de serviços AWS, projeto externo, DNS ou publicação. Supabase permanece comprovado como prova local; fornecedor definitivo do backend ainda precisa de decisão. |
+| DEC-043 | Usar Supabase Auth como implementação inicial de autenticação no ambiente local | Confirmada por Camila em 16/09/2026 | Autoriza a prova B1 com identidades fictícias e chaves da CLI local em memória. Não escolhe fornecedor definitivo ou hospedado, não cria usuário real e não conecta automaticamente o protótipo. |
 
 ## Decisões em aberto
 
@@ -59,4 +63,5 @@ Atualizado em 04/09/2026
 - forma de aceite do cliente no MVP;
 - ferramenta ou integração futura de assinatura;
 - marca e domínio do SaaS;
-- tecnologia definitiva de produção após a prova; Supabase está confirmado somente para a prova controlada.
+- tecnologia definitiva de produção após a prova; Supabase está confirmado somente para a prova controlada;
+- serviços futuros na AWS e orçamento quando a hospedagem for considerada.

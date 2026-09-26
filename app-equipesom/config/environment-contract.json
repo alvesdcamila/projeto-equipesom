@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "currentScope": "configuration-only-no-frontend-connection",
+  "currentScope": "b3-local-auth-and-readonly-proposals-opt-in",
   "environments": {
     "local": {
       "stage": "local",
@@ -26,7 +26,8 @@
     "VITE_DATA_MODE",
     "VITE_PUBLIC_APP_ORIGIN",
     "VITE_SUPABASE_URL",
-    "VITE_SUPABASE_PUBLISHABLE_KEY"
+    "VITE_SUPABASE_PUBLISHABLE_KEY",
+    "VITE_B3_LOCAL_AUTH"
   ],
   "serverOnlySecretVariables": [
     "SUPABASE_ACCESS_TOKEN",
@@ -42,7 +43,6 @@
   ],
   "reservedUntilFrontendConnectionIsAuthorized": [
     "VITE_PUBLIC_APP_ORIGIN",
-    "VITE_SUPABASE_URL",
-    "VITE_SUPABASE_PUBLISHABLE_KEY"
+    "VITE_SUPABASE_URL"
   ]
 }

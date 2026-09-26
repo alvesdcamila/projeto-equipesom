@@ -8,17 +8,36 @@ import {
   ShieldCheck,
   UserRound,
 } from 'lucide-react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { platformBrand } from '../config/platform'
 import { runtimeEnvironment } from '../config/runtimeEnvironment'
+import { useB3LocalSession } from '../components/auth/B3LocalSession'
 
 export function LoginPage() {
+  const navigate = useNavigate()
+  const { signIn } = useB3LocalSession()
   const [showPassword, setShowPassword] = useState(false)
   const [showPrototypeNotice, setShowPrototypeNotice] = useState(false)
+  const [busy, setBusy] = useState(false)
+  const [error, setError] = useState('')
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
-    setShowPrototypeNotice(true)
+    if (!runtimeEnvironment.b3LocalAuthEnabled) {
+      setShowPrototypeNotice(true)
+      return
+    }
+    const form = new FormData(event.currentTarget)
+    setError('')
+    setBusy(true)
+    try {
+      await signIn(String(form.get('email') ?? ''), String(form.get('password') ?? ''))
+      navigate('/acesso-local/propostas', { replace: true })
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : 'Não foi possível entrar no teste local.')
+    } finally {
+      setBusy(false)
+    }
   }
 
   return (
@@ -49,7 +68,7 @@ export function LoginPage() {
             <span className="login-page__context-line" aria-hidden="true" />
             <div className="login-page__context-item">
               <span className="login-page__context-icon"><Building2 size={19} /></span>
-              <span><small>Empresa cliente</small><strong>EQUIPESOM</strong></span>
+              <span><small>Empresa cliente</small><strong>{runtimeEnvironment.b3LocalAuthEnabled ? 'Vínculo autorizado' : 'EQUIPESOM'}</strong></span>
             </div>
           </div>
         </div>
@@ -69,6 +88,9 @@ export function LoginPage() {
             <span className="login-card__eyebrow">{platformBrand.portalName}</span>
             <h1>Acesse sua conta</h1>
             <p>Use seu e-mail individual. A empresa será carregada a partir do seu vínculo autorizado.</p>
+            {runtimeEnvironment.b3LocalAuthEnabled ? (
+              <p className="login-card__b3-label">Prova local com contas fictícias. A sessão dura somente nesta aba.</p>
+            ) : null}
           </div>
 
           <form className="login-form" onSubmit={handleSubmit}>
@@ -116,11 +138,13 @@ export function LoginPage() {
               Esqueci minha senha
             </button>
 
-            <button className="login-form__submit" type="submit">
-              Entrar
+            <button className="login-form__submit" type="submit" disabled={busy}>
+              {busy ? 'Entrando...' : 'Entrar'}
               <ArrowRight size={19} aria-hidden="true" />
             </button>
           </form>
+
+          {error ? <div className="login-card__notice" role="alert"><ShieldCheck size={20} aria-hidden="true" /><p>{error}</p></div> : null}
 
           <div className="login-card__signup">
             <span>Ainda não tem acesso?</span>
@@ -131,9 +155,10 @@ export function LoginPage() {
             <div className="login-card__notice" role="status">
               <ShieldCheck size={20} aria-hidden="true" />
               <p>
-                <strong>Interface pronta para validação visual.</strong>
-                O acesso real será ativado somente após a escolha e a configuração segura do
-                provedor de autenticação.
+                <strong>{runtimeEnvironment.b3LocalAuthEnabled ? 'Recuperação ainda não ativada.' : 'Interface pronta para validação visual.'}</strong>
+                {runtimeEnvironment.b3LocalAuthEnabled
+                  ? ' A prova local não envia e-mail nem altera a senha. Solicite uma nova orientação à administradora.'
+                  : ' O acesso real será ativado somente após a escolha e a configuração segura do provedor de autenticação.'}
               </p>
             </div>
           ) : null}

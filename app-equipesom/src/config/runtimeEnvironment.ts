@@ -8,6 +8,7 @@ const knownDataModes: RuntimeDataMode[] = ['prototype-local', 'isolated-empty']
 const requestedDataMode = import.meta.env.VITE_DATA_MODE?.trim().toLowerCase()
 
 const clientForbiddenSecretNames = [
+  'VITE_SUPABASE_ACCESS_TOKEN',
   'VITE_SUPABASE_SERVICE_ROLE_KEY',
   'VITE_SUPABASE_DB_URL',
   'VITE_SUPABASE_DB_PASSWORD',
@@ -76,11 +77,21 @@ const dataMode = resolveDataMode()
 assertNoClientSecrets()
 assertNoLocalEndpointOutsideLocal()
 
+const b3LocalAuthEnabled = import.meta.env.VITE_B3_LOCAL_AUTH === 'enabled'
+if (b3LocalAuthEnabled && (
+  stage !== 'local'
+  || !import.meta.env.DEV
+  || !import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY?.trim()
+)) {
+  throw new Error('A prova B3 exige desenvolvimento local e chave pública da stack local.')
+}
+
 export const runtimeEnvironment = {
   stage,
   dataMode,
   isLocal: stage === 'local',
   allowsPrototypeData: stage === 'local' && dataMode === 'prototype-local',
+  b3LocalAuthEnabled,
   label: {
     local: 'Ambiente local',
     homologation: 'Ambiente de homologação',

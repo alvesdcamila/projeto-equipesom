@@ -26,3 +26,33 @@ Thumbs.db
 *.tmp
 *.temp
 ~$*
+
+# Supabase local
+.supabase-home/
+app-equipesom/supabase/exports/
+
+# Temporários do projeto
+app-equipesom/tmp/
+
+# Arquivos de inspeção gerados automaticamente
+*.inspect.ndjson
+
+# Pacotes/arquivos compactados
+*.zip
+
+# Documento cadastral que não precisa ser versionado
+CARTAO CNPJ EDEVALDO.pdf
+
+# Documentos auxiliares/binários do projeto
+*.docx
+*.xlsx
+
+# PDFs auxiliares
+Blueprint_Produto_Orcamentos_v0.1.pdf
+Pacote_Continuidade_EQUIPESOM_v0.1/Blueprint_Produto_Orcamentos_v0.1.pdf
+
+# Documentos comerciais/operacionais da etapa inicial
+1_ETAPA/
+
+# Fontes com documentos sensíveis/comerciais
+Pacote_Continuidade_EQUIPESOM_v0.1/fontes/

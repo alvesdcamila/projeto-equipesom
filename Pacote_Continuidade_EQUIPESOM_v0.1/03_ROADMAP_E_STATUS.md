@@ -1,6 +1,14 @@
 # Roadmap e status — Projeto EQUIPESOM
 
-Atualizado em 16/09/2026
+Atualizado em 17/09/2026
+
+## B3 — acesso local e leitura autorizada (preparação concluída; execução integrada bloqueada)
+
+Foi preparado um modo opt-in de desenvolvimento que conecta o login ao Auth Supabase local e lê propostas somente após validar identidade, vínculo ativo e tenant. A nova rota `/acesso-local/propostas` é somente leitura; a rota `/propostas`, o `localStorage` e a emissão atual do navegador permanecem preservados. O proxy aceita apenas loopback e o modo `local`; não há conexão por padrão, emissão B2 real, SMTP ou dados operacionais.
+
+O TypeScript e o contrato de ambientes passaram. A execução integrada com contas e propostas fictícias está pronta em `npm run verify:b3-readonly`, mas permanece pendente porque a CLI não conseguiu acessar Docker/telemetria local por `EPERM` nesta sessão e a tentativa elevada foi bloqueada pelo limite de uso. O relatório está em `15_PROVA_B3_INTEGRACAO_LOCAL_v0.1.md`.
+
+Próximo gate: executar a prova integrada e confirmar limpeza da massa fictícia; depois Camila decide permissões de emissão e o registro da autorização de desconto por Edevaldo. SMTP autenticado segue trilha separada.
 
 ## Concluído
 
@@ -67,9 +75,27 @@ O roteiro operacional que orientou esse marco permanece registrado abaixo:
 4. A versão emitida é salva em PDF pela impressão nativa e conferida antes do envio externo, que continua sob responsabilidade de Edevaldo.
 5. Depois desta validação operacional, a prova local Supabase pode ser retomada para executar as 27 asserções pgTAP e gerar a exportação SQL somente se todas passarem.
 
-## Próximo passo imediato — concluir a prova multiempresa Supabase somente local
+## Prova multiempresa Supabase somente local — concluída em 16/09/2026
 
-Confirmar WSL2, Docker Linux e Supabase CLI, aplicar a migração local preparada e executar as 27 asserções pgTAP em PostgreSQL com dois tenants e dois usuários fictícios dentro de transação com `ROLLBACK`. A checagem estrutural não substitui essa execução. Gerar e conferir a exportação SQL do esquema somente se todas as asserções passarem. O resultado da prova e o contrato de configuração devem orientar a separação futura entre local, homologação e produção, sem conexão do frontend, segundo tenant operacional, dados reais, projeto externo, DNS ou publicação nesta etapa.
+WSL2, Docker Linux e Supabase CLI `2.116.0` foram confirmados. A migração `20260902193000_access_foundation_probe.sql` foi aplicada no PostgreSQL local, e as 27 asserções pgTAP passaram (`Result: PASS`). O teste usou dois tenants e dois usuários fictícios em `BEGIN`/`ROLLBACK`; a consulta posterior encontrou zero registros desses tenants e usuários. Somente após esse resultado foi gerada a exportação de esquema `app-equipesom/supabase/exports/access-foundation.sql`, sem linhas de dados. A prova não escolhe a arquitetura definitiva, não valida PDF real, não conecta o frontend e não cria tenant operacional ou projeto externo. O relatório técnico v0.1 permanece como registro histórico do bloqueio anterior; esta atualização documenta sua superação.
+
+## Retomada do backend local — primeira fatia concluída em 16/09/2026
+
+Camila definiu que administrará pessoalmente chaves, autorizações e trocas de acesso; quer o backend como prioridade antes de investir em hospedagem AWS; e admite dados reais na futura homologação, ainda em fases de teste. As decisões estão em `02_REGISTRO_DE_DECISOES.md` (DEC-040–042). A especificação `12_ESPECIFICACAO_DE_AMBIENTES_v0.2.md` sucede a v0.1, que foi preservada; ela condiciona qualquer lote real de homologação a isolamento, acesso individual, backup/restauração e aprovação concreta de Camila. Não há transferência de dados agora.
+
+No Supabase exclusivamente local, a migração `20260916160000_proposal_backend_foundation.sql` acrescentou proposta, rascunho e versão como entidades distintas, políticas por `tenant_id` e gatilho de imutabilidade de versão. A suíte completa passou com **46 asserções pgTAP** (27 da fundação anterior e 19 da nova fatia), todas com dados fictícios e `ROLLBACK`; a consulta posterior encontrou zero registros fictícios persistidos. Não há login funcional, emissão transacional, API de negócio conectada ao site, projeto externo ou migração do `localStorage`. Essa é uma entrega parcial de backend, não a conclusão do backend.
+
+## B1 — Supabase Auth e contexto de acesso local testados em 16/09/2026
+
+Camila confirmou Supabase Auth somente como implementação local inicial (DEC-043). A migração `20260916170000_local_auth_context.sql` fornece o contexto de pessoa e vínculos ativos a partir da sessão. O comando opt-in `npm run verify:local-auth` autenticou três identidades fictícias no serviço local e comprovou isolamento, negação sem vínculo, suspensão e revogação; os IDs de teste foram removidos. A suíte pgTAP completa passou com **56 asserções** e `ROLLBACK`; a consulta posterior encontrou zero usuários, tenants, vínculos, probes e revogações fictícios persistidos. Evidências e limites constam em `13_PROVA_B1_AUTH_LOCAL_v0.1.md`. A tela `/login` ainda é visual e o protótipo do navegador permanece inalterado.
+
+## B2 — emissão transacional somente local testada em 16/09/2026
+
+As migrações `20260916180000_b2_local_issuance_probe.sql` e `20260916183000_b2_snapshot_integrity.sql` acrescentaram prefixo/fuso configurados por tenant, contador anual transacional, número e fotografia financeira com fuso preservado na versão imutável e auditoria de emissão. A função de teste exige sessão e vínculo ativos e um portão por tenant **fechado por padrão**; esse portão não representa permissão operacional. A suíte completa passou com **90 asserções pgTAP** (34 novas de B2), usando dados fictícios e `ROLLBACK`. Duas alocações concorrentes no contador fictício receberam números 1 e 2, e sua massa temporária foi removida. Uma falha tardia na emissão reverteu contador e versão. Detalhes e limites estão em `14_PROVA_B2_EMISSAO_LOCAL_v0.1.md`.
+
+## Próximo passo imediato — integração controlada local (B3), ainda sem operação real
+
+Planejar a conexão do login e das leituras autorizadas do site ao backend com identidades fictícias, preservando o `localStorage` e sem habilitar emissão comercial real. Antes de liberar emissão e desconto para EQUIPESOM, Camila precisa decidir quem cria, revisa e emite, e como a autorização de desconto por Edevaldo será registrada e invalidada após alterações. A regra de arredondamento, limites e fluxo de segunda versão também permanecem para validação. Depois seguem homologação autorizada (H1) e produção (P1). SMTP autenticado continua separado. AWS é intenção posterior, sem orçamento ou serviços escolhidos; não há projeto externo, DNS, publicação ou commit nesta etapa.
 
 ## Emissão comercial local implementada em 04/09/2026
 

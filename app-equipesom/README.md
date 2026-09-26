@@ -1,6 +1,6 @@
 # Protótipo EQUIPESOM
 
-Experiência navegável, responsiva e mobile-first do sistema de propostas da EQUIPESOM. Esta versão usa dados simulados e armazenamento local provisório; não possui banco de dados, autenticação, integrações, assinatura eletrônica nem geração definitiva de PDF.
+Experiência navegável, responsiva e mobile-first do sistema de propostas da EQUIPESOM. O modo padrão continua usando dados simulados e armazenamento local provisório; a prova B3 acrescenta, somente por opt-in local, login Supabase e leitura autorizada de propostas fictícias. Não há emissão B2 operacional, SMTP, assinatura eletrônica nem geração definitiva de PDF.
 
 ## Requisitos
 
@@ -23,6 +23,10 @@ npm run dev
 
 Abra no navegador a URL exibida pelo Vite. Para testar no celular conectado à mesma rede, use `npm run dev -- --host` e abra o endereço de rede informado.
 
+### Prova B3 local (opt-in)
+
+Com a stack Supabase local ativa, `npm run dev:b3` inicia uma porta de desenvolvimento separada e habilita o login com contas fictícias e a rota `/acesso-local/propostas`. A sessão fica apenas na memória desta aba; o protótipo em `/propostas`, o `localStorage` e a emissão atual do navegador não são alterados. A tela B3 é somente leitura e não cria, edita, emite ou envia propostas. Nenhuma conta ou proposta fictícia é criada pelo servidor de desenvolvimento; a massa descartável da validação é criada e removida apenas por `npm run verify:b3-readonly`.
+
 ## Verificações
 
 ```bash
@@ -32,6 +36,7 @@ npm run test
 npm run build
 npm run verify:prototype
 npm run verify:access-foundation:static
+npm run verify:b3-readonly
 npm run test:smtp-proof
 ```
 
