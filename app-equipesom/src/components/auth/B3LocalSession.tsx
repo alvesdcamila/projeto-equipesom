@@ -16,11 +16,7 @@ export function B3LocalSessionProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (!session) return
     const remaining = session.expiresAt - Date.now()
-    if (remaining <= 0) {
-      setSession(null)
-      return
-    }
-    const timer = window.setTimeout(() => setSession(null), remaining)
+    const timer = window.setTimeout(() => setSession(null), Math.max(0, remaining))
     return () => window.clearTimeout(timer)
   }, [session])
 
@@ -36,6 +32,8 @@ export function B3LocalSessionProvider({ children }: { children: ReactNode }) {
   return <B3SessionContext.Provider value={value}>{children}</B3SessionContext.Provider>
 }
 
+// O provider e o hook formam uma única fronteira de sessão exclusiva da prova B3.
+// eslint-disable-next-line react-refresh/only-export-components
 export function useB3LocalSession() {
   const context = useContext(B3SessionContext)
   if (!context) throw new Error('B3LocalSessionProvider não encontrado.')

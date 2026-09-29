@@ -1,14 +1,14 @@
 # Roadmap e status — Projeto EQUIPESOM
 
-Atualizado em 17/09/2026
+Atualizado em 28/09/2026
 
-## B3 — acesso local e leitura autorizada (preparação concluída; execução integrada bloqueada)
+## B3 — acesso local e leitura autorizada (prova integrada concluída no Mac)
 
-Foi preparado um modo opt-in de desenvolvimento que conecta o login ao Auth Supabase local e lê propostas somente após validar identidade, vínculo ativo e tenant. A nova rota `/acesso-local/propostas` é somente leitura; a rota `/propostas`, o `localStorage` e a emissão atual do navegador permanecem preservados. O proxy aceita apenas loopback e o modo `local`; não há conexão por padrão, emissão B2 real, SMTP ou dados operacionais.
+O modo opt-in de desenvolvimento conecta o login ao Auth Supabase local e lê propostas somente após validar identidade, vínculo ativo e tenant. A rota `/acesso-local/propostas` é somente leitura; a rota `/propostas`, o `localStorage` e a emissão atual do navegador permanecem preservados. O proxy aceita apenas loopback e o modo `local`; não há conexão por padrão, emissão B2 real, SMTP ou dados operacionais.
 
-O TypeScript e o contrato de ambientes passaram. A execução integrada com contas e propostas fictícias está pronta em `npm run verify:b3-readonly`, mas permanece pendente porque a CLI não conseguiu acessar Docker/telemetria local por `EPERM` nesta sessão e a tentativa elevada foi bloqueada pelo limite de uso. O relatório está em `15_PROVA_B3_INTEGRACAO_LOCAL_v0.1.md`.
+Em 28/09/2026, no Mac ARM, as dependências foram reinstaladas para a plataforma, Docker Desktop e o Supabase exclusivamente local foram iniciados, e as 90 asserções pgTAP passaram. `npm run verify:b3-readonly` comprovou login, vínculo, leitura somente leitura, isolamento entre tenants, negação cruzada/anônima, B2 desligado e limpeza integral das três contas, dois tenants e duas propostas fictícias. O relatório está em `15_PROVA_B3_INTEGRACAO_LOCAL_v0.1.md`.
 
-Próximo gate: executar a prova integrada e confirmar limpeza da massa fictícia; depois Camila decide permissões de emissão e o registro da autorização de desconto por Edevaldo. SMTP autenticado segue trilha separada.
+Próximo gate: Camila validar visualmente o login e a lista B3 em `http://127.0.0.1:5174/login` com acesso fictício temporário e, ao concluir, executar a limpeza verificável. Depois Camila decide permissões de emissão e o registro da autorização de desconto por Edevaldo. SMTP autenticado segue trilha separada.
 
 ## Concluído
 

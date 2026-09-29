@@ -25,9 +25,6 @@ export function B3LocalProposalsPage() {
   useEffect(() => {
     if (!session || !tenantId) return
     let cancelled = false
-    setLoading(true)
-    setError('')
-    setProposals([])
     readB3Proposals(session, tenantId)
       .then((result) => { if (!cancelled) setProposals(result) })
       .catch((cause: unknown) => {
@@ -36,6 +33,13 @@ export function B3LocalProposalsPage() {
       .finally(() => { if (!cancelled) setLoading(false) })
     return () => { cancelled = true }
   }, [session, tenantId])
+
+  function selectTenant(nextTenantId: string) {
+    setLoading(true)
+    setError('')
+    setProposals([])
+    setTenantId(nextTenantId)
+  }
 
   if (!session) return null
 
@@ -57,7 +61,7 @@ export function B3LocalProposalsPage() {
         <div className="b3-readonly-page__context">
           <span>Pessoa: {session.context.user.displayName || 'Usuário fictício'}</span>
           <label htmlFor="b3-tenant">Empresa vinculada</label>
-          <select id="b3-tenant" value={tenantId} onChange={(event) => setTenantId(event.target.value)}>
+          <select id="b3-tenant" value={tenantId} onChange={(event) => selectTenant(event.target.value)}>
             {session.context.memberships.map((membership) => (
               <option key={membership.tenantId} value={membership.tenantId}>
                 {membership.tenantName}

@@ -17,6 +17,8 @@
     "verify:access-foundation:static": "node scripts/verify-access-foundation.mjs",
     "verify:local-auth": "node scripts/verify-local-auth.mjs",
     "verify:b3-readonly": "node scripts/verify-b3-readonly.mjs",
+    "prepare:b3-manual": "node scripts/manage-b3-manual-access.mjs prepare",
+    "cleanup:b3-manual": "node scripts/manage-b3-manual-access.mjs cleanup",
     "verify:b2-concurrency": "node scripts/verify-b2-counter-concurrency.mjs",
     "verify:environment-contract": "node scripts/verify-environment-contract.mjs",
     "start:access-foundation": "supabase start -x realtime,storage-api,imgproxy,studio,edge-runtime,logflare,vector,supavisor",

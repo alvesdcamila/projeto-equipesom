@@ -1,6 +1,6 @@
 # Prova B3 — integração local de acesso e leitura (v0.1)
 
-Atualizado em 17/09/2026. Escopo autorizado por Camila: somente Supabase local, contas e propostas fictícias; preservar `localStorage` e a emissão existente no navegador; manter B2 desabilitado para operação real.
+Atualizado em 28/09/2026. Escopo autorizado por Camila: somente Supabase local, contas e propostas fictícias; preservar `localStorage` e a emissão existente no navegador; manter B2 desabilitado para operação real.
 
 ## O que foi preparado
 
@@ -29,10 +29,15 @@ Atualizado em 17/09/2026. Escopo autorizado por Camila: somente Supabase local, 
 | --- | --- |
 | TypeScript (`npm run typecheck`) | **PASS** |
 | Contrato local/homologação/produção | **PASS** |
-| Lint amplo | Não concluído: o ESLint foi impedido por uma pasta temporária bloqueada pelo sistema (`app-equipesom/.tmp/docx-temp/...`), sem alteração nesses artefatos |
-| Prova REST B3 com massa fictícia, isolamento e limpeza | **PENDENTE por bloqueio do ambiente**: a CLI Supabase não conseguiu acessar o Docker local/gravou telemetria por `EPERM`; a tentativa elevada foi rejeitada pelo limite de uso da sessão |
+| Lint amplo | **PASS** no Mac após duas correções delimitadas de efeitos React da B3 |
+| Build de produção | **PASS** |
+| Banco local | **PASS: 4 arquivos e 90 asserções pgTAP** |
+| B1 Auth local | **PASS** com isolamento, suspensão, revogação e limpeza |
+| Prova REST B3 com massa fictícia, isolamento e limpeza | **PASS em 28/09/2026 no Docker Desktop/Supabase local do Mac** |
 
-A prova integrada permanece pronta no comando `npm run verify:b3-readonly`. Quando a CLI/Docker puder ser executada, ela deverá comprovar: dois logins fictícios; cada usuário vendo somente seu tenant; tentativa cruzada retornando conjunto vazio; anônimo sem leitura; conta sem vínculo sem memberships; B2 sem `b2_test_enabled`; e remoção final de toda a massa fictícia. Nenhuma credencial, token ou dado real é impresso ou persistido.
+`npm run verify:b3-readonly` comprovou: dois logins fictícios; cada usuário vendo somente seu tenant; tentativa cruzada retornando conjunto vazio; anônimo sem leitura; conta sem vínculo sem memberships; B2 sem `b2_test_enabled`; e remoção final de toda a massa fictícia. Nenhuma credencial, token ou dado real foi persistido.
+
+Para a conferência visual de Camila, `npm run prepare:b3-manual` cria somente no ambiente local uma conta `example.invalid`, vínculo, tenant e proposta fictícios e registra os IDs e credenciais temporárias em `tmp/b3-manual-access.json`, com permissão `0600`. `npm run cleanup:b3-manual` remove todos os registros pelos IDs, comprova zero remanescentes e apaga o arquivo. Um ciclo completo de preparação e limpeza passou antes da abertura do acesso final.
 
 ## Limites preservados
 
@@ -43,4 +48,4 @@ A prova integrada permanece pronta no comando `npm run verify:b3-readonly`. Quan
 
 ## Próximo passo
 
-Reexecutar `npm run verify:b3-readonly` com Docker Linux/WSL2 acessível. Só após todas as asserções integradas e a limpeza confirmadas deve-se validar a tela B3 no navegador local. Em seguida, Camila decide as permissões de emissão e a forma de registrar o desconto; a preparação de homologação continua sem dados reais até haver isolamento, backup/restauração e aprovação de lote.
+Camila valida a tela em `http://127.0.0.1:5174/login` com a conta fictícia temporária e confirma o encerramento da conferência. Em seguida, executar `npm run cleanup:b3-manual` e registrar a verificação de zero remanescentes. Depois Camila decide as permissões de emissão e a forma de registrar o desconto; a preparação de homologação continua sem dados reais até haver isolamento, backup/restauração e aprovação de lote.

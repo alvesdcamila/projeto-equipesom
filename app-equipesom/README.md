@@ -27,6 +27,8 @@ Abra no navegador a URL exibida pelo Vite. Para testar no celular conectado à m
 
 Com a stack Supabase local ativa, `npm run dev:b3` inicia uma porta de desenvolvimento separada e habilita o login com contas fictícias e a rota `/acesso-local/propostas`. A sessão fica apenas na memória desta aba; o protótipo em `/propostas`, o `localStorage` e a emissão atual do navegador não são alterados. A tela B3 é somente leitura e não cria, edita, emite ou envia propostas. Nenhuma conta ou proposta fictícia é criada pelo servidor de desenvolvimento; a massa descartável da validação é criada e removida apenas por `npm run verify:b3-readonly`.
 
+Depois que a prova automatizada B3 passar, uma validação manual controlada pode ser preparada com `npm run prepare:b3-manual`. O comando aceita somente a stack local, cria uma conta `example.invalid`, um tenant e uma proposta fictícios, grava as credenciais temporárias em `tmp/b3-manual-access.json` com acesso restrito ao usuário local e informa a URL `http://127.0.0.1:5174/login`. Depois da conferência, `npm run cleanup:b3-manual` remove a conta e todos os registros pelos IDs registrados, comprova zero remanescentes e apaga o arquivo temporário. O acesso não habilita B2, não lê `localStorage` e não usa SMTP ou recursos externos.
+
 ## Verificações
 
 ```bash
