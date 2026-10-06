@@ -1,9 +1,9 @@
 {
   "projeto": "EQUIPESOM - gerador de propostas para eventos",
   "versao_contexto": "0.3",
-  "atualizado_em": "2026-09-28",
-  "fase": "backend local em desenvolvimento: prova integrada B3 aprovada no Mac; validação visual manual fictícia preparada, com emissão B2 real desabilitada",
-  "proximo_marco": "Camila validar a tela B3 com acesso fictício temporário e confirmar a limpeza; depois decidir permissões de emissão e autorização de desconto",
+  "atualizado_em": "2026-09-30",
+  "fase": "backend local em desenvolvimento: prova integrada e validação manual do login B3 concluídas no Mac; gate B3 ainda aberto e emissão B2 real desabilitada",
+  "proximo_marco": "analisar e registrar validação em celular, regressão de PDF e decisão ou plano de migração opt-in antes de encerrar formalmente o gate B3",
   "pessoas": {
     "camila": "responsável pelo projeto, organização e revisão",
     "edevaldo": "sócio, responsável operacional, assinatura e envio"
@@ -74,7 +74,7 @@
     "versao": "0.4",
     "arquivo": "09_FUNDACAO_DE_ACESSO_E_TENANCY_v0.4.md",
     "matriz_avaliacao": "10_MATRIZ_DE_AVALIACAO_DA_FUNDACAO_v0.1.md",
-    "status": "B3 opt-in local comprovado no Mac com Auth, leitura somente leitura, isolamento entre tenants e limpeza; validação visual manual fictícia é o próximo passo",
+    "status": "B3 opt-in local comprovado no Mac com Auth, leitura somente leitura, isolamento entre tenants e limpeza; validação manual do login concluída, mas o gate permanece aberto",
     "identidade_plataforma": "Console Group",
     "hostname_plataforma": "app.consolegroup.com.br",
     "hostname_definido_por_camila": true,
@@ -125,6 +125,15 @@
     "b3_relatorio": "15_PROVA_B3_INTEGRACAO_LOCAL_v0.1.md",
     "b3_acesso_manual_ficticio_preparado": true,
     "b3_limpeza_acesso_manual_testada": true,
+    "b3_validacao_manual_login_concluida": true,
+    "b3_validacao_manual_login_concluida_em": "2026-09-30",
+    "b3_limpeza_final_confirmada": true,
+    "b3_gate_concluido": false,
+    "b3_criterios_pendentes": [
+      "validação em celular",
+      "regressão de PDF",
+      "decisão ou plano de migração opt-in"
+    ],
     "login_b3_local_ficticio_testado": true,
     "b2_aprovacao_desconto_implementada": false,
     "b2_permissoes_emissao_decididas": false,

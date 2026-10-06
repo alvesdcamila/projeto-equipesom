@@ -2,6 +2,17 @@
 
 Este arquivo mantém o histórico verificável de alterações materiais do protótipo. As entradas registram o estado anterior, a origem da solicitação, a decisão aplicada e as verificações executadas, sem substituir os documentos históricos do projeto.
 
+## 2026-09-30 — Validação manual do login B3 concluída e massa fictícia removida
+
+- **Origem:** Camila confirmou em 30/09/2026 que concluiu com sucesso a validação manual do login B3 usando o acesso fictício temporário e apresentou a saída final do comando `npm run cleanup:b3-manual`.
+- **Comportamento anterior:** a prova integrada automatizada B3 estava aprovada no Mac e o mecanismo de acesso manual havia passado em um ciclo técnico de preparação e limpeza, mas a conferência perceptiva por Camila e a remoção do acesso disponibilizado para essa conferência ainda constavam como próximas ações.
+- **Alteração registrada:** a validação manual do login B3 passa a constar como concluída. A evidência de limpeza informada por Camila foi `PASS: acesso manual B3 removido; zero contas, vínculos, tenants, propostas e rascunhos fictícios restantes.` O arquivo temporário `app-equipesom/tmp/b3-manual-access.json` também foi confirmado como ausente durante a atualização documental.
+- **Justificativa:** alinhar o registro, o roadmap, o estado estruturado e o relatório técnico ao resultado efetivamente validado, sem ampliar a conclusão para todo o gate B3.
+- **Arquivos afetados:** `REGISTRO_DE_ALTERACOES.md`, `Pacote_Continuidade_EQUIPESOM_v0.1/03_ROADMAP_E_STATUS.md`, `07_ESTADO_DO_PROJETO.json` e `15_PROVA_B3_INTEGRACAO_LOCAL_v0.1.md`.
+- **Impacto em dados existentes:** nenhum dado real, proposta operacional, PDF, inventário, credencial externa ou chave de `localStorage` foi lido, migrado ou alterado por esta atualização documental. A massa manual fictícia foi removida pelo comando de limpeza executado por Camila; nenhuma credencial temporária foi registrada nos documentos.
+- **Compatibilidade e migração:** B2 permanece desabilitado para operação real e não houve migração. O gate B3 continua aberto, condicionado à validação em celular, à regressão de PDF e à decisão ou ao plano de migração opt-in. SMTP, dados reais, homologação e infraestrutura externa permanecem fora do escopo.
+- **Verificações executadas:** os quatro documentos autorizados foram confrontados com a especificação vigente de ambientes; o JSON foi validado sintaticamente; as referências aos três critérios pendentes e aos limites de B2, dados reais, SMTP e infraestrutura externa foram conferidas; `git diff --check` foi executado. Não houve repetição das suítes de código ou banco porque esta alteração é exclusivamente documental.
+
 ## 2026-09-28 — Retomada da B3 no Mac e acesso manual fictício controlado
 
 - **Origem:** Camila confirmou que a última etapa pendente era a B3, bloqueada no notebook Windows por falta de espaço no Docker, e autorizou preparar o Mac, reinstalar dependências ARM, configurar Git/Docker, executar as provas locais e disponibilizar um acesso manual temporário, sem B2 real, migração de `localStorage`, SMTP ou infraestrutura externa.

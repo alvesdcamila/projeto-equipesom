@@ -1,14 +1,16 @@
 # Roadmap e status — Projeto EQUIPESOM
 
-Atualizado em 28/09/2026
+Atualizado em 30/09/2026
 
-## B3 — acesso local e leitura autorizada (prova integrada concluída no Mac)
+## B3 — acesso local e leitura autorizada (prova integrada e validação manual do login concluídas; gate aberto)
 
 O modo opt-in de desenvolvimento conecta o login ao Auth Supabase local e lê propostas somente após validar identidade, vínculo ativo e tenant. A rota `/acesso-local/propostas` é somente leitura; a rota `/propostas`, o `localStorage` e a emissão atual do navegador permanecem preservados. O proxy aceita apenas loopback e o modo `local`; não há conexão por padrão, emissão B2 real, SMTP ou dados operacionais.
 
 Em 28/09/2026, no Mac ARM, as dependências foram reinstaladas para a plataforma, Docker Desktop e o Supabase exclusivamente local foram iniciados, e as 90 asserções pgTAP passaram. `npm run verify:b3-readonly` comprovou login, vínculo, leitura somente leitura, isolamento entre tenants, negação cruzada/anônima, B2 desligado e limpeza integral das três contas, dois tenants e duas propostas fictícias. O relatório está em `15_PROVA_B3_INTEGRACAO_LOCAL_v0.1.md`.
 
-Próximo gate: Camila validar visualmente o login e a lista B3 em `http://127.0.0.1:5174/login` com acesso fictício temporário e, ao concluir, executar a limpeza verificável. Depois Camila decide permissões de emissão e o registro da autorização de desconto por Edevaldo. SMTP autenticado segue trilha separada.
+Em 30/09/2026, Camila confirmou a validação manual bem-sucedida do login B3 com o acesso fictício temporário. Depois da conferência, executou `npm run cleanup:b3-manual`, que informou zero contas, vínculos, tenants, propostas e rascunhos fictícios restantes. Essa confirmação encerra somente a validação manual do login, não o gate B3 completo.
+
+Próximo gate: analisar e registrar os três critérios B3 ainda abertos — validação em celular, regressão de PDF e decisão ou plano de migração opt-in. Até decisão explícita sobre esses critérios, B3 permanece aberto; B2 não pode ser habilitado para operação real. Permissões de emissão e registro da autorização de desconto por Edevaldo vêm depois do fechamento formal de B3. SMTP autenticado segue trilha separada.
 
 ## Concluído
 
@@ -93,9 +95,9 @@ Camila confirmou Supabase Auth somente como implementação local inicial (DEC-0
 
 As migrações `20260916180000_b2_local_issuance_probe.sql` e `20260916183000_b2_snapshot_integrity.sql` acrescentaram prefixo/fuso configurados por tenant, contador anual transacional, número e fotografia financeira com fuso preservado na versão imutável e auditoria de emissão. A função de teste exige sessão e vínculo ativos e um portão por tenant **fechado por padrão**; esse portão não representa permissão operacional. A suíte completa passou com **90 asserções pgTAP** (34 novas de B2), usando dados fictícios e `ROLLBACK`. Duas alocações concorrentes no contador fictício receberam números 1 e 2, e sua massa temporária foi removida. Uma falha tardia na emissão reverteu contador e versão. Detalhes e limites estão em `14_PROVA_B2_EMISSAO_LOCAL_v0.1.md`.
 
-## Próximo passo imediato — integração controlada local (B3), ainda sem operação real
+## Próximo passo imediato — completar os critérios restantes do gate B3
 
-Planejar a conexão do login e das leituras autorizadas do site ao backend com identidades fictícias, preservando o `localStorage` e sem habilitar emissão comercial real. Antes de liberar emissão e desconto para EQUIPESOM, Camila precisa decidir quem cria, revisa e emite, e como a autorização de desconto por Edevaldo será registrada e invalidada após alterações. A regra de arredondamento, limites e fluxo de segunda versão também permanecem para validação. Depois seguem homologação autorizada (H1) e produção (P1). SMTP autenticado continua separado. AWS é intenção posterior, sem orçamento ou serviços escolhidos; não há projeto externo, DNS, publicação ou commit nesta etapa.
+A integração controlada do login e da leitura B3 foi comprovada com identidades fictícias, e Camila encerrou a validação manual do login em 30/09/2026 com limpeza verificável. Antes de declarar o gate B3 concluído, ainda é necessário decidir e registrar: teste do fluxo relevante em celular; regressão do PDF existente; e plano de migração opt-in, explícito, controlado e reversível. Até lá, preservar o `localStorage` e manter a emissão B2 operacional desabilitada. Depois do fechamento formal de B3, Camila poderá decidir quem cria, revisa e emite, e como a autorização de desconto por Edevaldo será registrada e invalidada após alterações. Homologação (H1), produção (P1), SMTP autenticado e infraestrutura externa continuam gates separados.
 
 ## Emissão comercial local implementada em 04/09/2026
 
