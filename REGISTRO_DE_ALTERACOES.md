@@ -2,6 +2,19 @@
 
 Este arquivo mantém o histórico verificável de alterações materiais do protótipo. As entradas registram o estado anterior, a origem da solicitação, a decisão aplicada e as verificações executadas, sem substituir os documentos históricos do projeto.
 
+## 2026-10-07 — Encerramento da B3 como prova técnica local
+
+- **Origem:** decisão explícita de Camila nesta conversa para considerar encerrada a B3 como prova técnica local e atualizar somente a documentação necessária, sem alterar autenticação, relaxar proteções, habilitar recursos reais ou criar commit/push.
+- **Comportamento anterior:** o roadmap, o estado estruturado, o relatório B3, o Plano de Voo e as instruções do projeto registravam a validação manual do login como concluída, mas mantinham o gate B3 aberto por três critérios: validação em celular, regressão de PDF e plano de migração opt-in.
+- **Alteração registrada:** a B3 passa a constar como encerrada no escopo de prova técnica local. Foram registrados como comprovados autenticação local, sessão, leitura autorizada, isolamento por tenant, validação manual do login e limpeza com zero contas, vínculos, tenants, propostas e rascunhos fictícios restantes. Também foi registrado o acesso bem-sucedido do frontend em dispositivo móvel físico pela LAN.
+- **Limite móvel preservado:** o fluxo B3 autenticado não foi executado no celular porque o proxy da prova é deliberadamente restrito a loopback. A validação end-to-end móvel foi transferida para homologação futura com endpoint apropriado; a proteção local não foi removida ou alterada.
+- **Critérios transferidos:** validação end-to-end móvel em homologação; regressão de PDF pós-integração, sem nova evidência de execução nesta etapa; e plano de migração opt-in explícito, controlado e reversível, como requisito futuro e não como implementação da B3.
+- **Justificativa:** distinguir a conclusão suficiente de uma prova local das validações dependentes de ambiente apropriado, sem transformar critérios futuros em bloqueio artificial nem declarar como executada uma verificação sem evidência.
+- **Arquivos afetados:** `AGENTS.md`, `REGISTRO_DE_ALTERACOES.md`, `Pacote_Continuidade_EQUIPESOM_v0.1/02_REGISTRO_DE_DECISOES.md`, `03_ROADMAP_E_STATUS.md`, `07_ESTADO_DO_PROJETO.json`, `15_PROVA_B3_INTEGRACAO_LOCAL_v0.1.md` e `docs/PLANO_DE_VOO_SET27.md`.
+- **Impacto em dados existentes:** nenhum. Nenhum código, banco, autenticação, sessão, proposta, PDF, `localStorage`, dado real ou credencial foi alterado. Não houve migração.
+- **Compatibilidade e infraestrutura:** B2 real, SMTP, dados reais, usuários operacionais e infraestrutura externa permanecem desabilitados. Nenhuma proteção de loopback foi relaxada; nenhum serviço externo, commit ou push foi executado.
+- **Verificações executadas:** documentos vigentes confrontados na ordem definida pelo projeto; coerência das referências B3 conferida; JSON validado sintaticamente; `git diff --check` executado. Suítes de código e banco não foram repetidas porque a alteração é exclusivamente documental.
+
 ## 2026-09-30 — Validação manual do login B3 concluída e massa fictícia removida
 
 - **Origem:** Camila confirmou em 30/09/2026 que concluiu com sucesso a validação manual do login B3 usando o acesso fictício temporário e apresentou a saída final do comando `npm run cleanup:b3-manual`.

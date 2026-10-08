@@ -1,6 +1,6 @@
 # Registro de decisões — Projeto EQUIPESOM
 
-Atualizado em 16/09/2026
+Atualizado em 07/10/2026
 
 | ID | Decisão | Estado | Observação |
 |---|---|---|---|
@@ -47,6 +47,7 @@ Atualizado em 16/09/2026
 | DEC-041 | A futura homologação poderá usar dados reais durante testes em fases | Confirmada como direção por Camila em 16/09/2026 | Não autoriza transferência agora. Cada lote depende de autorização de Camila, acesso individual, isolamento, backup/restauração e identificação dos registros; testes negativos multiempresa continuam com dados fictícios. Não oficializar automaticamente dados do navegador. |
 | DEC-042 | Priorizar o backend local antes de investir em hospedagem; AWS é intenção futura | Confirmada como prioridade e intenção por Camila em 16/09/2026 | Não há orçamento disponível agora nem escolha de serviços AWS, projeto externo, DNS ou publicação. Supabase permanece comprovado como prova local; fornecedor definitivo do backend ainda precisa de decisão. |
 | DEC-043 | Usar Supabase Auth como implementação inicial de autenticação no ambiente local | Confirmada por Camila em 16/09/2026 | Autoriza a prova B1 com identidades fictícias e chaves da CLI local em memória. Não escolhe fornecedor definitivo ou hospedado, não cria usuário real e não conecta automaticamente o protótipo. |
+| DEC-044 | Encerrar a B3 como prova técnica local e transferir os critérios não executados para gates futuros | Confirmada por Camila em 07/10/2026 | Autenticação local, sessão, leitura autorizada, isolamento por `tenant_id`, login manual e limpeza com zero registros fictícios estão comprovados. O frontend foi acessado em celular físico pela LAN; o fluxo B3 autenticado não foi executado no celular porque o proxy é deliberadamente restrito a loopback. A validação end-to-end móvel deverá ocorrer em homologação com endpoint apropriado, sem relaxar essa proteção. A regressão de PDF pós-integração e o plano de migração opt-in permanecem requisitos futuros. A decisão não habilita B2 real, SMTP, dados reais ou infraestrutura externa. |
 
 ## Decisões em aberto
 

@@ -184,7 +184,7 @@ Elas não representam autorização automática para operação real.
 
 ---
 
-# 8. Estado atual — 30/09/2026
+# 8. Estado atual — 07/10/2026
 
 ## B1
 
@@ -269,42 +269,29 @@ Portanto:
 
 **VALIDAÇÃO MANUAL DO LOGIN B3: CONCLUÍDA**
 
-Isso não equivale ao encerramento formal de todo o gate B3.
+Em 07/10/2026, Camila encerrou formalmente a B3 como prova técnica local, considerando em conjunto esta validação e as evidências automatizadas de autenticação, sessão, leitura autorizada e isolamento por tenant.
 
 ---
 
-# 10. Gate B3 — situação atual
+# 10. Gate B3 — encerrado como prova técnica local
 
-O gate B3 permanece aberto até que seja tomada decisão explícita sobre os critérios adicionais já identificados.
+O frontend foi acessado com sucesso em dispositivo móvel físico pela LAN. O fluxo B3 autenticado não foi executado no celular porque o proxy da prova é deliberadamente restrito a loopback. A proteção não deve ser removida apenas para satisfazer a prova local.
 
-Pendências conhecidas:
+Critérios transferidos para gates futuros:
 
-### B3.1 — Validação em celular
+### Validação end-to-end móvel em homologação
 
-Verificar o comportamento do fluxo relevante em dispositivo móvel e registrar o resultado.
+Executar o fluxo autenticado em dispositivo móvel físico quando houver homologação com endpoint apropriado, preservando a restrição de loopback da prova local.
 
-### B3.2 — Regressão de PDF
+### Regressão de PDF pós-integração
 
-Confirmar que as alterações introduzidas durante B1/B2/B3 não causaram regressões no fluxo de geração ou visualização de PDF já existente.
+Confirmar em gate próprio que as alterações introduzidas durante B1/B2/B3 não causaram regressões no fluxo de geração ou visualização de PDF já existente. Não há nova evidência dessa regressão nesta etapa.
 
-### B3.3 — Plano de migração opt-in
+### Plano de migração opt-in
 
-Definir como uma eventual migração futura será realizada de forma explícita, controlada e reversível, sem converter automaticamente dados ou fluxos existentes.
+Definir em etapa futura como uma eventual migração será realizada de forma explícita, controlada e reversível, sem converter automaticamente dados ou fluxos existentes. Esse plano não foi implementado na B3.
 
-Após essas três análises será tomada decisão explícita entre:
-
-```text
-Encerrar B3
-```
-
-ou:
-
-```text
-Mover determinado critério para gate posterior,
-com justificativa documentada.
-```
-
-B3 não deve ser marcado como concluído apenas porque o login manual funcionou.
+O fechamento decorre do escopo de prova local e das evidências acumuladas; não equivale à aprovação desses três critérios nem à autorização para operação real.
 
 ---
 

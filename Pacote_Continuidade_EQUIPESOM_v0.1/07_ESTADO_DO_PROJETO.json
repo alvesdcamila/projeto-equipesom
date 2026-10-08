@@ -1,9 +1,9 @@
 {
   "projeto": "EQUIPESOM - gerador de propostas para eventos",
   "versao_contexto": "0.3",
-  "atualizado_em": "2026-09-30",
-  "fase": "backend local em desenvolvimento: prova integrada e validação manual do login B3 concluídas no Mac; gate B3 ainda aberto e emissão B2 real desabilitada",
-  "proximo_marco": "analisar e registrar validação em celular, regressão de PDF e decisão ou plano de migração opt-in antes de encerrar formalmente o gate B3",
+  "atualizado_em": "2026-10-07",
+  "fase": "B3 encerrada como prova técnica local; autenticação, sessão, leitura autorizada, isolamento por tenant, login manual e limpeza foram comprovados; emissão B2 real permanece desabilitada",
+  "proximo_marco": "definir o próximo gate sem habilitar operação real; validação end-to-end móvel em homologação, regressão de PDF pós-integração e plano de migração opt-in permanecem requisitos futuros",
   "pessoas": {
     "camila": "responsável pelo projeto, organização e revisão",
     "edevaldo": "sócio, responsável operacional, assinatura e envio"
@@ -74,7 +74,7 @@
     "versao": "0.4",
     "arquivo": "09_FUNDACAO_DE_ACESSO_E_TENANCY_v0.4.md",
     "matriz_avaliacao": "10_MATRIZ_DE_AVALIACAO_DA_FUNDACAO_v0.1.md",
-    "status": "B3 opt-in local comprovado no Mac com Auth, leitura somente leitura, isolamento entre tenants e limpeza; validação manual do login concluída, mas o gate permanece aberto",
+    "status": "B3 encerrada como prova técnica local no Mac, com Auth, sessão, leitura autorizada, isolamento entre tenants, validação manual do login e limpeza com zero registros fictícios comprovados",
     "identidade_plataforma": "Console Group",
     "hostname_plataforma": "app.consolegroup.com.br",
     "hostname_definido_por_camila": true,
@@ -128,11 +128,15 @@
     "b3_validacao_manual_login_concluida": true,
     "b3_validacao_manual_login_concluida_em": "2026-09-30",
     "b3_limpeza_final_confirmada": true,
-    "b3_gate_concluido": false,
-    "b3_criterios_pendentes": [
-      "validação em celular",
-      "regressão de PDF",
-      "decisão ou plano de migração opt-in"
+    "b3_frontend_mobile_lan_acessado": true,
+    "b3_fluxo_autenticado_mobile_executado": false,
+    "b3_fluxo_autenticado_mobile_limite": "não executado porque o proxy B3 da prova local é deliberadamente restrito a loopback",
+    "b3_gate_concluido": true,
+    "b3_gate_concluido_em": "2026-10-07",
+    "b3_criterios_transferidos_para_gates_futuros": [
+      "validação end-to-end móvel em homologação com endpoint apropriado, sem relaxar a proteção de loopback da prova local",
+      "regressão de PDF pós-integração",
+      "plano de migração opt-in explícito, controlado e reversível"
     ],
     "login_b3_local_ficticio_testado": true,
     "b2_aprovacao_desconto_implementada": false,

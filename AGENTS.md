@@ -126,8 +126,8 @@ Não executar `git commit`, `git push`, mudanças destrutivas ou operações ext
 
 O projeto passou por provas locais progressivas de autenticação, backend e integração da interface.
 
-A validação manual do login B3 foi concluída com sucesso em ambiente local, incluindo limpeza comprovada da massa fictícia.
+A B3 foi encerrada como prova técnica local: autenticação, sessão, leitura autorizada e isolamento por tenant foram comprovados; a validação manual do login passou e a limpeza terminou com zero registros fictícios.
 
-O gate B3 completo ainda depende da análise dos critérios restantes de celular, regressão de PDF e plano de migração opt-in.
+O frontend foi acessado em dispositivo móvel físico pela LAN, mas o fluxo B3 autenticado não foi executado no celular porque o proxy da prova é deliberadamente restrito a loopback. A validação end-to-end móvel, a regressão de PDF pós-integração e o plano de migração opt-in foram transferidos para gates futuros; a validação móvel deverá ocorrer em homologação com endpoint apropriado, sem relaxar a proteção local.
 
 A troca de computador deve ser tratada como exercício de reprodutibilidade: o projeto precisa poder ser reconstruído a partir do repositório, dependências declaradas, migrations e configuração documentada.

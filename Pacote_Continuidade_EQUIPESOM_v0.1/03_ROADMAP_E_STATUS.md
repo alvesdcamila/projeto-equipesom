@@ -1,16 +1,18 @@
 # Roadmap e status — Projeto EQUIPESOM
 
-Atualizado em 30/09/2026
+Atualizado em 07/10/2026
 
-## B3 — acesso local e leitura autorizada (prova integrada e validação manual do login concluídas; gate aberto)
+## B3 — acesso local e leitura autorizada (prova técnica local encerrada)
 
 O modo opt-in de desenvolvimento conecta o login ao Auth Supabase local e lê propostas somente após validar identidade, vínculo ativo e tenant. A rota `/acesso-local/propostas` é somente leitura; a rota `/propostas`, o `localStorage` e a emissão atual do navegador permanecem preservados. O proxy aceita apenas loopback e o modo `local`; não há conexão por padrão, emissão B2 real, SMTP ou dados operacionais.
 
 Em 28/09/2026, no Mac ARM, as dependências foram reinstaladas para a plataforma, Docker Desktop e o Supabase exclusivamente local foram iniciados, e as 90 asserções pgTAP passaram. `npm run verify:b3-readonly` comprovou login, vínculo, leitura somente leitura, isolamento entre tenants, negação cruzada/anônima, B2 desligado e limpeza integral das três contas, dois tenants e duas propostas fictícias. O relatório está em `15_PROVA_B3_INTEGRACAO_LOCAL_v0.1.md`.
 
-Em 30/09/2026, Camila confirmou a validação manual bem-sucedida do login B3 com o acesso fictício temporário. Depois da conferência, executou `npm run cleanup:b3-manual`, que informou zero contas, vínculos, tenants, propostas e rascunhos fictícios restantes. Essa confirmação encerra somente a validação manual do login, não o gate B3 completo.
+Em 30/09/2026, Camila confirmou a validação manual bem-sucedida do login B3 com o acesso fictício temporário. Depois da conferência, executou `npm run cleanup:b3-manual`, que informou zero contas, vínculos, tenants, propostas e rascunhos fictícios restantes.
 
-Próximo gate: analisar e registrar os três critérios B3 ainda abertos — validação em celular, regressão de PDF e decisão ou plano de migração opt-in. Até decisão explícita sobre esses critérios, B3 permanece aberto; B2 não pode ser habilitado para operação real. Permissões de emissão e registro da autorização de desconto por Edevaldo vêm depois do fechamento formal de B3. SMTP autenticado segue trilha separada.
+Em 07/10/2026, Camila encerrou a B3 como prova técnica local. O frontend foi acessado com sucesso em dispositivo móvel físico pela LAN. O fluxo B3 autenticado não foi executado nesse dispositivo porque o proxy da prova aceita deliberadamente apenas loopback. Essa proteção não será removida para satisfazer a prova local.
+
+Foram transferidos para gates futuros: a validação end-to-end móvel em homologação com endpoint apropriado; a regressão de PDF pós-integração, que não possui nova evidência de execução nesta etapa; e o plano de migração opt-in, explícito, controlado e reversível. O encerramento não habilita B2 real, SMTP, dados reais, usuários operacionais, migração de `localStorage` ou infraestrutura externa. Permissões de emissão e a forma auditável de registrar a autorização de desconto por Edevaldo continuam decisões posteriores próprias.
 
 ## Concluído
 
